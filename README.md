@@ -4,19 +4,7 @@
 
 Store the API key as the environment variable `IC_API_KEY`.
 
-Create `terraform.tfvars` with reassigned variables if necessary.
-
-Example:
-```
-instance_name = "terraform-annotation"
-instance_profile = "bx2-4x16"
-user_name = "forome"
-disk_name = "/dev/vdd"
-volume_profile = "general-purpose"
-volume_capacity = "1000"
-ssh_key_name = "terraform-ssh"
-ssh_key_public_file = "~/.ssh/forome/id_rsa.pub"
-```
+Copy `terraform.tfvars.example` to `terraform.tfvars` and reassign variables if necessary.
 
 Deploy with terraform:
 ```
