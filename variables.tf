@@ -1,3 +1,6 @@
+variable "basename" {
+  default = "terraform"
+}
 variable "region" {
   description = "us-south"
   default = "us-south"
@@ -23,7 +26,7 @@ variable "security_group" {
   default = "r006-232af301-0d00-4d1e-98be-d37427e83cce"
 }
 variable "instance_name" {
-  default = "forome-annotation"
+  default = "annotation"
 }
 variable "instance_profile" {
   default = "bx2-4x16"
@@ -41,7 +44,7 @@ variable "volume_capacity" {
   default = "1000"
 }
 variable "ssh_key_name" {
-  default = "terraform-ssh"
+  default = "ssh"
 }
 variable "ssh_key_public_file" {
   default = "~/.ssh/id_rsa.pub"

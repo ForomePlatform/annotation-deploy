@@ -1,3 +1,4 @@
+variable "basename" {}
 variable "instance_name" {}
 variable "instance_profile" {}
 variable "volume_profile" {}

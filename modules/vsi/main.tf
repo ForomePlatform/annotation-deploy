@@ -9,14 +9,14 @@ data "template_file" "user_data" {
   }
 }
 resource "ibm_is_volume" "vol" {
-  name           = "${var.instance_name}-storage-${var.volume_capacity}gb"
+  name           = "${var.basename}-${var.instance_name}-storage-${var.volume_capacity}gb"
   resource_group = var.resource_group
   zone           = var.zone
   profile        = var.volume_profile
   capacity       = var.volume_capacity
 }
 resource "ibm_is_instance" "vsi" {
-  name           = var.instance_name
+  name           = "${var.basename}-${var.instance_name}"
   resource_group = var.resource_group
   vpc            = var.vpc
   zone           = var.zone
@@ -26,7 +26,7 @@ resource "ibm_is_instance" "vsi" {
   image          = data.ibm_is_image.ubuntu.id
   user_data      = data.template_file.user_data.rendered
   boot_volume {
-    name         = "${var.instance_name}-boot"
+    name         = "${var.basename}-${var.instance_name}-boot"
   }
   volumes        = [ibm_is_volume.vol.id]
   primary_network_interface {
@@ -36,7 +36,7 @@ resource "ibm_is_instance" "vsi" {
   }
 }
 resource "ibm_is_floating_ip" "fip" {
-  name           = var.instance_name
+  name           = "${var.basename}-${var.instance_name}"
   resource_group = var.resource_group
   target         = ibm_is_instance.vsi.primary_network_interface[0].id
 }
