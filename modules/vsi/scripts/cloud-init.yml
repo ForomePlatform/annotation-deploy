@@ -11,7 +11,7 @@ packages:
 - tmux
 package_update: true
 package_upgrade: true
-package_reboot_if_required: true
+package_reboot_if_required: false
 users:
 - default
 - name: ${user_name}
