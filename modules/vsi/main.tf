@@ -6,7 +6,13 @@ data "template_file" "user_data" {
   vars = {
     disk_name = var.disk_name
     user_name = var.user_name
+    ssh_public_key = var.ssh_public_key
   }
+}
+resource "ibm_is_floating_ip" "fip" {
+  name           = "${var.basename}-${var.instance_name}"
+  resource_group = var.resource_group
+  target         = ibm_is_instance.vsi.primary_network_interface[0].id
 }
 resource "ibm_is_volume" "vol" {
   name           = "${var.basename}-${var.instance_name}-storage-${var.volume_capacity}gb"
@@ -22,9 +28,11 @@ resource "ibm_is_instance" "vsi" {
   zone           = var.zone
   profile        = var.instance_profile
   keys           = [var.ssh_key_id]
-  # keys           = ["r006-93f8ced5-71d5-4540-887f-c560b7c66154"]
   image          = data.ibm_is_image.ubuntu.id
   user_data      = data.template_file.user_data.rendered
+  lifecycle {
+    ignore_changes = [ user_data ]
+  }
   boot_volume {
     name         = "${var.basename}-${var.instance_name}-boot"
   }
@@ -34,9 +42,4 @@ resource "ibm_is_instance" "vsi" {
     subnet          = var.subnet
     security_groups = [var.security_group]
   }
-}
-resource "ibm_is_floating_ip" "fip" {
-  name           = "${var.basename}-${var.instance_name}"
-  resource_group = var.resource_group
-  target         = ibm_is_instance.vsi.primary_network_interface[0].id
 }

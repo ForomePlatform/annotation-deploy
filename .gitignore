@@ -16,6 +16,7 @@ crash.log
 *.ssh
 **/id_rsa*
 **/*.pem
-**/*.pub
 **/*.key
 **/*key.json
+# Ansible
+inventory

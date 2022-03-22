@@ -1,13 +1,8 @@
-locals {
-  public_key = file(pathexpand(var.ssh_key_public_file))
-}
 resource "ibm_is_ssh_key" "ssh_public_key" {
   lifecycle {
-    # create_before_destroy = true
-    # prevent_destroy = true
     ignore_changes = [ public_key ]
   }
-  name = "${var.basename}-${var.ssh_key_name}"
+  name = "${var.basename}-terraform-ssh"
   resource_group = var.resource_group
-  public_key = local.public_key
+  public_key = var.ssh_public_key
 }

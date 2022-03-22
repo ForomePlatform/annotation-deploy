@@ -1,0 +1,6 @@
+# ---
+# - name: Reboot the machine (Wait for 5 min)
+#   gather_facts: false
+#   become: true
+#   reboot:
+#     reboot_timeout: 300

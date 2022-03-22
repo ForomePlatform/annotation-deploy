@@ -15,18 +15,15 @@ Deploy with terraform:
 ```
 terraform init
 terraform plan
-terraform apply
-terraform destroy
-```
-
-Additional commands:
-```
-terraform init -upgrade
 terraform apply -auto-approve
-terraform apply -destroy -auto-approve
 ```
 
-Connect to instance:
+Configure with ansible:
 ```
-ssh -i $YOUR_SSH_PRIVATE_KEY $USER_NAME@$INSTANCE_EXTERNAL_IP
+ansible-playbook main.yml
+```
+
+To destroy deployment:
+```
+terraform apply -destroy -auto-approve
 ```

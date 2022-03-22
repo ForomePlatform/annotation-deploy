@@ -6,20 +6,18 @@ bootcmd:
 - mkfs.ext4 ${disk_name}1 -L data
 mounts:
 - [ "LABEL=data", "/data", "ext4", "defaults", "0", "0" ]
-packages:
-- vim
-- tmux
-package_update: true
-package_upgrade: true
-package_reboot_if_required: false
 users:
 - default
 - name: ${user_name}
   shell: '/bin/bash'
   sudo: ['ALL=(ALL:ALL) NOPASSWD:ALL']
+  groups: sudo
   ssh-authorized-keys:
-    - 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDgBuNkMFWh8CK5ON4j9UPlTD7B9e0HQaW8OrFkG06Jl9jCICHhyfzNDDAgt8q0HVBcCfsygC2l/O9qR35WJKIKxDmaDTUBSBEAWLCBz33pZ44+/yFjOrSj8k0fdVtH6cBOI/LF8NxepEESpDzmMdbblvCXV3SbUfcd1rCQoR6JcaSZr2BiuLe9nfm5hmjHkA7+eh8B6qXucvQIWFcALKzAsYsHvuxdfu8CYrtEUCgyPjcyYxHfM49MV1JJK53XBcuSUQSZ7yRjXPEDp0YMPmq/Z379PGAYkEee/Ia1m2txvcUMtaswcsK9cirzDmHrOLwVFTlV3Xf10Bjt3ybpqSOWVr6zqHTQCOjm++7sIplftzQCEkDTBVM6IflIc5K9r5CKmCBDMraKLX+rVMshNRno5h5Xuo05+rUq2Ab892LOu++0Bylw0fTWlxqHbICdEAuDkCpgUDqP24UTsoBIo8rWC7HMnwzFDXyMoOc2pB8tstzppLNGHXaUmnwBUtv6mIk= nikita.kapishev'
-    - 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDQ4NOFfi6Rf8F1o9dnHxvDlFnowrxK168B0dmDaNUELODz+gCrdZXq2exSh9EzwFh8B/ZNMqhapMpFP+jXhqTGBfgpI39bdOKqj65JhBF+yPsNifsMcTx3CLYbIRcH+KWiZPYEuYtHxe9t2I0irvd+ITT8pmZA4tdsS9EgcwJRxWHDFiqNMOVwBBMOusVggcLdJ1hrH+BydlRuSlhXx295U/0uD/j/wh1nl4sQ/ydl98bEY0i/nbGTK3QGjSjLrOyVvCyiFKdmZ3MAXvu2CEnmsdOHCXVrcAawduFDx0belADVH4NeJDJ4NjzmsaJdYj6bl+/oRddYt9/V4QMOUy37 andrey.shaporenko'
-    - 'ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEA5KEUXxoiBY7l1J4VbbSNB5KIJmgCU7z7t+xbjkFSQ+wFLni+kyFIs2kX2atK0RflKshvawGsKuUW2JIurB1buMyO4gpiQMUJVFGzPbs0PhNu+yyyOTPm0snQufq2lW0o4hMEofiVqWRFXMzj8oqJMnVMoB8a2IxMyjEhLeetiywoX4cowgY6qAZgfmE9f/f2b/5gEr7d5dLW65sfwN1i+AvZHx/RVvOMcYKSDwkIZ9mJH8L0gobOuzSlwl7sPo47/2o9ydm5bBcPDo5ITJelKNaZbTv72qZIr1UkGOjEhPTDkg4mz4mqTjcnD88+3yX9O2VWxwnq8bqr0pH8kPYulw== evgeniy.abrosin'
-    - 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDkqoRS+bfkMltBb+wdWfWHmljbMF890ZFJlex1jiWz9OKk7KYcSttCs8g3e1eaA1YECmC58iHVk5DLJYRVwdryF1VEctmEXXB7+J2uQo/9L2ryLvnm5LcYBMpFCXvh1vjXwqJ1s1ed5cJSfi8AF/MayXOEyaGbJnD/qYpZV9XdSQFMaXMKg6hjbrYnTb7o0sj0T6dOiX/j48g7OUKO4qeK0GXsj4r7d0DvweEV6NOVlX0mQx3AZjYenOYQulMKTKX8z2QykF60rxcD5mU/5d+rh87i+h7RLeilDEhfp1tYmUvFAyXvurfkFXAvnry4iXbnkO02MjFe+O/I2jJqFf5rs6Ynm8UQa0LO0h616unyvmor+JkyGRTHwUdL8gEDQNcmJLPWxz3jWi/F+I1KDf3iouf6RgiNoQ/7rWcyr4vPqiBfge4jn8iyHg2GFClTqBEtUSTBVT3C1q6DBO9pR6+xXDj6w4+g7Tzt9ADgTYWY58RIR5wnVl2OVhRuH0vohrc= mikhail.bychkovskiy'
-    - 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCmbm2RKYwXsEHO8djDGIeSITK2bBkhymzU+v9Gy8rxbvHSbuUyNIZeP4hmMMPquXIAKVozZj+A8e+WIUZGc1E6Xm2h8o3p1kKqK3nB+WrXsqPyZ3AuzfDS8nvecTRpSgiaJeZOtFGDbIeccN8BMy48/P49KxN0fvYcWeqoFZw8NX+OP526QcHXKCW9bKxvVM+BGixYcB/0DZOz6B8LzuYFR6JDq4hnUKZW+0kq+J3qFCqsCiyst0gPBvchh9H1/6TIUuh8AXrjc70KuFDKb3HDTNMFSQdKc9jQixwIjEmWvCYbvDSPfVjg5ZGjN7jsxYbgfzl+HN8FaERG7KIHq2Z4UBboEOYOceC8IpAQzTLgx/YdZrCmmbobDShjVsntTVDhL/3fY5O53Q0XvSY5bgMaCuXh8IBzF2Mewxui0zOjDuPlYRtRhkvpsl6LMbwNs8X+Aq1ou+MfTKVazQJCTjqSd9ejXAF3n/paA3j8d4uGH1ihO9gDO0HMPgzdP+xj+U8= Mikhail.Polykovskiy'
+  - ${ssh_public_key}
+package_update: true
+package_upgrade: true
+package_reboot_if_required: false
+packages:
+- vim
+- tmux
+- python3

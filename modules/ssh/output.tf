@@ -1,6 +1,3 @@
-output "name" {
-  value = ibm_is_ssh_key.ssh_public_key.name
-}
 output "id" {
   value = ibm_is_ssh_key.ssh_public_key.id
 }

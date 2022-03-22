@@ -16,6 +16,6 @@ output "access_key_id" {
 output "secret_access_key" {
   value = ibm_resource_key.cos_key.credentials["cos_hmac_keys.secret_access_key"]
 }
-output "bucket_name" {
-  value = ibm_cos_bucket.bucket.bucket_name
-}
+# output "bucket_name" {
+#   value = ibm_cos_bucket.bucket.bucket_name
+# }

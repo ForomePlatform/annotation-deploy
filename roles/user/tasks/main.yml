@@ -1,0 +1,20 @@
+---
+- name: Create user "{{ user }}"
+  user:
+    name: "{{ user }}"
+    shell: "/bin/bash"
+    groups: "sudo"
+    state: "present"
+- name: "Add authorized keys"
+  authorized_key:
+    user: "{{ user }}"
+    key: "{{ lookup('file', item) }}"
+    state: "present"
+  with_fileglob:
+    - "*.pub"
+- name: "Allow sudo users to sudo without a password"
+  lineinfile:
+    dest: "/etc/sudoers"
+    regexp: "^%sudo"
+    line: "%sudo ALL=(ALL:ALL) NOPASSWD:ALL"
+    state: "present"

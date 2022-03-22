@@ -1,0 +1,35 @@
+---
+- name: Update and upgrade apt packages
+  become: true
+  register: apt_result
+  apt:
+    upgrade: yes
+    update_cache: yes
+    cache_valid_time: 86400
+- name: Debug update and upgrade
+  debug:
+    var: apt_result
+    verbosity: 2
+  when: apt_result is defined
+- name: Install main packages
+  become: true
+  apt:
+    update_cache: yes
+    install_recommends: no
+    name: "{{ packages }}"
+    state: present
+  async: 1000
+  poll: 0
+  register: apt_sleeper
+- name: Check async status
+  async_status:
+    jid: "{{ apt_sleeper.ansible_job_id }}"
+  register: job_result
+  until: job_result.finished
+  retries: 100
+  delay: 10
+- name: Debug async status
+  debug:
+    var: job_result
+    verbosity: 2
+  when: job_result is defined

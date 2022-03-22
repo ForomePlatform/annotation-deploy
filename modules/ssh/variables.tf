@@ -1,5 +1,4 @@
 variable "basename" {}
 variable "region" {}
 variable "resource_group" {}
-variable "ssh_key_name" {}
-variable "ssh_key_public_file" {}
+variable "ssh_public_key" {}

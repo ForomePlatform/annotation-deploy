@@ -29,7 +29,7 @@ variable "instance_name" {
   default = "annotation"
 }
 variable "instance_profile" {
-  default = "bx2-4x16"
+  default = "bx2-2x8"
 }
 variable "user_name" {
   default = "forome"
@@ -43,9 +43,9 @@ variable "volume_profile" {
 variable "volume_capacity" {
   default = "1000"
 }
-variable "ssh_key_name" {
-  default = "ssh"
-}
-variable "ssh_key_public_file" {
+variable "ssh_public_key_file" {
   default = "~/.ssh/id_rsa.pub"
+}
+variable "ssh_private_key_file" {
+  default = "~/.ssh/id_rsa"
 }
