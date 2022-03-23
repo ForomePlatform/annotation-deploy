@@ -28,13 +28,16 @@ module "vsi" {
   resource_group = var.resource_group
   instance_name = var.instance_name
   instance_profile = var.instance_profile
-  volume_profile = var.volume_profile
-  volume_capacity = var.volume_capacity
+  var_volume_profile = var.var_volume_profile
+  var_volume_capacity = var.var_volume_capacity
+  data_volume_profile = var.data_volume_profile
+  data_volume_capacity = var.data_volume_capacity
   ssh_key_id = module.ssh.id
   ssh_public_key_file = local.ssh_public_key_file
   ssh_public_key = local.ssh_public_key
   user_name = var.user_name
-  disk_name = var.disk_name
+  var_disk_name = var.var_disk_name
+  data_disk_name = var.data_disk_name
 }
 resource "local_file" "ansible_inventory" {
   content = templatefile("inventory.tpl",
@@ -48,4 +51,14 @@ resource "local_file" "ansible_inventory" {
     }
   )
   filename = "inventory"
+}
+resource "null_resource" "ansible-playbook" {
+  depends_on = [local_file.ansible_inventory]
+  triggers = {
+    always_run = timestamp()
+  }
+  provisioner "local-exec" {
+    command = "ansible-playbook main.yml"
+    interpreter = ["bash", "-c"]
+  }
 }

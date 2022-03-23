@@ -34,13 +34,22 @@ variable "instance_profile" {
 variable "user_name" {
   default = "forome"
 }
-variable "disk_name" {
+variable "var_disk_name" {
   default = "/dev/vdd"
 }
-variable "volume_profile" {
+variable "data_disk_name" {
+  default = "/dev/vdc"
+}
+variable "var_volume_profile" {
   default = "general-purpose"
 }
-variable "volume_capacity" {
+variable "var_volume_capacity" {
+  default = "1000"
+}
+variable "data_volume_profile" {
+  default = "general-purpose"
+}
+variable "data_volume_capacity" {
   default = "1000"
 }
 variable "ssh_public_key_file" {

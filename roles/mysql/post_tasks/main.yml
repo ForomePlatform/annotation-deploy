@@ -1,0 +1,15 @@
+---
+# - name: Create /data/mysql and /var/lib/mysql
+#   file:
+#     path: "{{ item }}"
+#     state: directory
+#   with_items:
+#   - '/data/mysql'
+#   - '/var/lib/mysql'
+# - name: Mount /var/lib/mysql to /data/mysql
+#   ansible.posix.mount:
+#     path: /data/mysql
+#     src: /var/lib/mysql
+#     opts: bind
+#     state: mounted
+#     fstype: none

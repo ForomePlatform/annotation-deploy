@@ -7,9 +7,15 @@ output "instance_profile" {
 output "instance_ext_ip" {
   value = ibm_is_floating_ip.fip.address
 }
-output "volume_profile" {
-  value = ibm_is_volume.vol.profile
+output "var_volume_profile" {
+  value = ibm_is_volume.var.profile
 }
-output "volume_capacity" {
-  value = ibm_is_volume.vol.capacity
+output "var_volume_capacity" {
+  value = ibm_is_volume.var.capacity
+}
+output "data_volume_profile" {
+  value = ibm_is_volume.data.profile
+}
+output "data_volume_capacity" {
+  value = ibm_is_volume.data.capacity
 }

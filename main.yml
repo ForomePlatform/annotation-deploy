@@ -1,5 +1,10 @@
 ---
 - hosts: all
+  gather_facts: no
   roles:
   - user
   - apt
+  # - aws-cli
+  - copydata
+  # - copy-data
+  # - mysql
