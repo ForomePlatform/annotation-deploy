@@ -1,11 +1,13 @@
 ---
 - name: Create user "{{ user }}"
+  become: true
   user:
     name: "{{ user }}"
     shell: "/bin/bash"
     groups: "sudo"
     state: "present"
 - name: "Add authorized keys"
+  become: true
   authorized_key:
     user: "{{ user }}"
     key: "{{ lookup('file', item) }}"
@@ -13,6 +15,7 @@
   with_fileglob:
     - "*.pub"
 - name: "Allow sudo users to sudo without a password"
+  become: true
   lineinfile:
     dest: "/etc/sudoers"
     regexp: "^%sudo"

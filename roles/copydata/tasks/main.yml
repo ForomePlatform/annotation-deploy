@@ -5,6 +5,16 @@
   with_items:
     - boto3
     - botocore
+
+- name: Set permissions for {{ destlocation }}
+  become: true
+  file:
+    path: "{{ destlocation }}"
+    state: directory
+    mode: 0755
+    owner: "{{ lookup('vars','ansible_user') }}"
+    group: "{{ lookup('vars','ansible_user') }}"
+
 - name: Get the list of files first
   amazon.aws.aws_s3:
     profile: "{{ profile }}"

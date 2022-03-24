@@ -22,6 +22,7 @@
   poll: 0
   register: apt_sleeper
 - name: Check async status
+  become: true
   async_status:
     jid: "{{ apt_sleeper.ansible_job_id }}"
   register: job_result
@@ -29,6 +30,7 @@
   retries: 100
   delay: 10
 - name: Debug async status
+  become: true
   debug:
     var: job_result
     verbosity: 2

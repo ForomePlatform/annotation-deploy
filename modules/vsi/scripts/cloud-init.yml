@@ -18,10 +18,10 @@ users:
   groups: sudo
   ssh-authorized-keys:
   - ${ssh_public_key}
-package_update: true
-package_upgrade: true
-package_reboot_if_required: false
-packages:
-- vim
-- tmux
-- python3
+# package_update: true
+# package_upgrade: true
+# package_reboot_if_required: true
+# packages:
+# - vim
+# - tmux
+# - python3

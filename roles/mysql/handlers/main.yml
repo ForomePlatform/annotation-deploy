@@ -1,3 +1,18 @@
----
-- name: restart mysql
-  service: "name={{ mysql_daemon }} state=restarted sleep=5"
+- name: Start mysql
+  service:
+    name: mysql
+    state: started
+    enabled: yes
+
+- name: Unarchive dump
+  unarchive:
+    src: /data/download/mysqldump.tar.gz
+    dest: /data/download
+    remote_src: yes
+  register: awscli_unarchive
+  notify:
+  - Restore database
+
+- name: Restore database
+  become: true
+  shell: mysql < /data/download/mysqldump.sql

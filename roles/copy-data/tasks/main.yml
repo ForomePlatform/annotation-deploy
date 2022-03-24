@@ -1,19 +1,31 @@
 ---
-- name: This command will download anotation service data
-  become_user: "{{ aws_system_user }}"
-  shell: |
-    aws --endpoint-url https://s3.us-south.cloud-object-storage.appdomain.cloud s3 cp --recursive s3://forome-annotation/data/ /data
-    chown -R forome:forome /data
+- name: Set permissions for {{ destlocation }}
+  become: true
+  file:
+    path: "{{ destlocation }}"
+    state: directory
+    mode: 0755
+    owner: "{{ lookup('vars','ansible_user') }}"
+    group: "{{ lookup('vars','ansible_user') }}"
+
+- name: aws s3 sync {{ bucket }} to {{ destlocation }}
+  shell: aws --endpoint-url {{ endpoint_url }} s3 sync s3://{{ bucket }}/{{ destlocation }} {{ destlocation }}
   async: 9999
-  poll: 10
+  poll: 0
   register: result
-- name: Check async status
+- name: Check aws s3 sync status
   async_status:
     jid: "{{ result.ansible_job_id }}"
   register: job_result
   until: job_result.finished
   retries: 9999
   delay: 10
+- name: Debug async status
+  debug:
+    var: job_result.stdout_lines
+  when: job_result is defined
+
+
   # - name: List s3 objects
   #   aws_s3:
   #     bucket: "forome-annotation"
@@ -32,32 +44,32 @@
   #   with_items: "{{ s3objects.s3_keys }}"
 
 
-- name: Download dataset pgp3140_wgs_hlpanel
-  amazon.aws.aws_s3:
-    bucket: forome-dataset-public
-    object: pgp3140_wgs_hlpanel.tar.gz
-    dest: /data/cases/pgp3140_wgs_hlpanel.tar.gz
-    mode: get
-    overwrite: different
-    s3_url: https://s3.us-south.cloud-object-storage.appdomain.cloud
+# - name: Download dataset pgp3140_wgs_hlpanel
+#   amazon.aws.aws_s3:
+#     bucket: forome-dataset-public
+#     object: pgp3140_wgs_hlpanel.tar.gz
+#     dest: /data/cases/pgp3140_wgs_hlpanel.tar.gz
+#     mode: get
+#     overwrite: different
+#     s3_url: https://s3.us-south.cloud-object-storage.appdomain.cloud
 
-- name: Download dataset pgp3140_wgs_nist-v4.2.tar.gz
-  amazon.aws.aws_s3:
-    bucket: forome-dataset-public
-    object: pgp3140_wgs_nist-v4.2.tar.gz
-    dest: /data/cases/pgp3140_wgs_nist-v4.2.tar.gz
-    mode: get
-    overwrite: different
-    s3_url: https://s3.us-south.cloud-object-storage.appdomain.cloud
+# - name: Download dataset pgp3140_wgs_nist-v4.2.tar.gz
+#   amazon.aws.aws_s3:
+#     bucket: forome-dataset-public
+#     object: pgp3140_wgs_nist-v4.2.tar.gz
+#     dest: /data/cases/pgp3140_wgs_nist-v4.2.tar.gz
+#     mode: get
+#     overwrite: different
+#     s3_url: https://s3.us-south.cloud-object-storage.appdomain.cloud
 
-- name: Extract dataset archive pgp3140_wgs_hlpanel.tar.gz
-  ansible.builtin.unarchive:
-    src: /data/cases/pgp3140_wgs_hlpanel.tar.gz
-    dest: /data/cases/
-    remote_src: yes
+# - name: Extract dataset archive pgp3140_wgs_hlpanel.tar.gz
+#   ansible.builtin.unarchive:
+#     src: /data/cases/pgp3140_wgs_hlpanel.tar.gz
+#     dest: /data/cases/
+#     remote_src: yes
 
-- name: Extract dataset archive pgp3140_wgs_nist-v4.2.tar.gz
-  ansible.builtin.unarchive:
-    src: /data/cases/pgp3140_wgs_nist-v4.2.tar.gz
-    dest: /data/cases/
-    remote_src: yes
+# - name: Extract dataset archive pgp3140_wgs_nist-v4.2.tar.gz
+#   ansible.builtin.unarchive:
+#     src: /data/cases/pgp3140_wgs_nist-v4.2.tar.gz
+#     dest: /data/cases/
+#     remote_src: yes

@@ -1,0 +1,30 @@
+---
+- name: Download dataset pgp3140_wgs_hlpanel
+  amazon.aws.aws_s3:
+    bucket: forome-dataset-public
+    object: pgp3140_wgs_hlpanel.tar.gz
+    dest: /data/cases/pgp3140_wgs_hlpanel.tar.gz
+    mode: get
+    overwrite: different
+    s3_url: https://s3.us-south.cloud-object-storage.appdomain.cloud
+
+- name: Extract dataset archive pgp3140_wgs_hlpanel.tar.gz
+  ansible.builtin.unarchive:
+    src: /data/cases/pgp3140_wgs_hlpanel.tar.gz
+    dest: /data/cases/
+    remote_src: yes
+
+- name: Download dataset pgp3140_wgs_nist-v4.2.tar.gz
+  amazon.aws.aws_s3:
+    bucket: forome-dataset-public
+    object: pgp3140_wgs_nist-v4.2.tar.gz
+    dest: /data/cases/pgp3140_wgs_nist-v4.2.tar.gz
+    mode: get
+    overwrite: different
+    s3_url: https://s3.us-south.cloud-object-storage.appdomain.cloud
+
+- name: Extract dataset archive pgp3140_wgs_nist-v4.2.tar.gz
+  ansible.builtin.unarchive:
+    src: /data/cases/pgp3140_wgs_nist-v4.2.tar.gz
+    dest: /data/cases/
+    remote_src: yes

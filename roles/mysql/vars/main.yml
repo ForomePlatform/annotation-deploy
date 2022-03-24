@@ -1,11 +1,8 @@
----
-mysql_bind_address: '127.0.0.1'
-mysql_users: 
-  - name: user
-    host: 127.0.0.1
-    password: user
-    priv: "*.*:ALL"
-  - name: hgmd
-    host: 127.0.0.1
-    password: hgmd
-    priv: "*.*:ALL"
+packages:
+- mysql-server
+- mysql-client 
+- python3-mysqldb
+- libmysqlclient-dev
+users:
+- user
+- hgmd
