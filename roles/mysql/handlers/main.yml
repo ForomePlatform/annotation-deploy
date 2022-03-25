@@ -1,18 +1,9 @@
-- name: Start mysql
+- name: start mysql
+  become: true
   service:
     name: mysql
     state: started
     enabled: yes
-
-- name: Unarchive dump
-  unarchive:
-    src: /data/download/mysqldump.tar.gz
-    dest: /data/download
-    remote_src: yes
-  register: awscli_unarchive
-  notify:
-  - Restore database
-
-- name: Restore database
+- name: Restore {{ mysqldump }}
   become: true
-  shell: mysql < /data/download/mysqldump.sql
+  shell: "mysql < {{ destlocation }}{{ mysqldump }}"

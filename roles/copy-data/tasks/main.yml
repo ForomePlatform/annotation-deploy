@@ -9,7 +9,7 @@
     group: "{{ lookup('vars','ansible_user') }}"
 
 - name: aws s3 sync {{ bucket }} to {{ destlocation }}
-  shell: aws --endpoint-url {{ endpoint_url }} s3 sync s3://{{ bucket }}/{{ destlocation }} {{ destlocation }}
+  shell: aws --endpoint-url {{ endpoint_url }} s3 sync s3://{{ bucket }}{{ destlocation }} {{ destlocation }}
   async: 9999
   poll: 0
   register: result
@@ -24,52 +24,3 @@
   debug:
     var: job_result.stdout_lines
   when: job_result is defined
-
-
-  # - name: List s3 objects
-  #   aws_s3:
-  #     bucket: "forome-annotation"
-  #     prefix: "data/"
-  #     mode: list
-  #     s3_url: https://s3.us-south.cloud-object-storage.appdomain.cloud
-  #   register: s3objects
-
-  # - name: Download s3objects
-  #   aws_s3:
-  #     bucket: "forome-annotation"
-  #     object: "{{ item }}"
-  #     mode: get
-  #     dest: "/{{ item }}"
-  #     s3_url: https://s3.us-south.cloud-object-storage.appdomain.cloud
-  #   with_items: "{{ s3objects.s3_keys }}"
-
-
-# - name: Download dataset pgp3140_wgs_hlpanel
-#   amazon.aws.aws_s3:
-#     bucket: forome-dataset-public
-#     object: pgp3140_wgs_hlpanel.tar.gz
-#     dest: /data/cases/pgp3140_wgs_hlpanel.tar.gz
-#     mode: get
-#     overwrite: different
-#     s3_url: https://s3.us-south.cloud-object-storage.appdomain.cloud
-
-# - name: Download dataset pgp3140_wgs_nist-v4.2.tar.gz
-#   amazon.aws.aws_s3:
-#     bucket: forome-dataset-public
-#     object: pgp3140_wgs_nist-v4.2.tar.gz
-#     dest: /data/cases/pgp3140_wgs_nist-v4.2.tar.gz
-#     mode: get
-#     overwrite: different
-#     s3_url: https://s3.us-south.cloud-object-storage.appdomain.cloud
-
-# - name: Extract dataset archive pgp3140_wgs_hlpanel.tar.gz
-#   ansible.builtin.unarchive:
-#     src: /data/cases/pgp3140_wgs_hlpanel.tar.gz
-#     dest: /data/cases/
-#     remote_src: yes
-
-# - name: Extract dataset archive pgp3140_wgs_nist-v4.2.tar.gz
-#   ansible.builtin.unarchive:
-#     src: /data/cases/pgp3140_wgs_nist-v4.2.tar.gz
-#     dest: /data/cases/
-#     remote_src: yes

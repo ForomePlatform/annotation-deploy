@@ -1,15 +1,27 @@
 ---
+- name: Ensure boto3 and botocore modules are installed
+  pip:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - boto3
+    - botocore
+
 - name: Installing Mysql and dependencies
   become: true
   package:
     name: "{{ item }}"
     state: present
     update_cache: yes
-  with_items: "{{ packages }}"
-  notify:
-  - Start mysql
+  with_items:
+  - mysql-server
+  - mysql-client 
+  - python3-mysqldb
+  - libmysqlclient-dev
+  notify: start mysql
 
 - name: creating mysql users
+  become: true
   mysql_user:
     name: "{{ item }}"
     password: "{{ item }}"
@@ -17,5 +29,51 @@
     host: 'localhost'
     state: present
   with_items: "{{ users }}"
-  notify:
-  - Unarchive dump
+
+- name: Prepare directory {{ destlocation }}
+  become: true
+  file:
+    path: "{{ destlocation }}"
+    state: directory
+    mode: 0755
+    owner: "{{ lookup('vars','ansible_user') }}"
+    group: "{{ lookup('vars','ansible_user') }}"
+
+- name: Download {{ mysqlarch }}
+  amazon.aws.aws_s3:
+    bucket: "{{ bucket }}"
+    object: "{{ destlocation }}{{ mysqlarch }}"
+    dest: "{{ destlocation }}{{ mysqlarch }}"
+    mode: get
+    overwrite: different
+    s3_url: "{{ endpoint_url }}"
+  register: mysqlarch_download
+
+- name: Unarchive {{ mysqlarch }}
+  unarchive:
+    src: "{{ destlocation }}{{ mysqlarch }}"
+    dest: "{{ destlocation }}"
+    remote_src: yes
+  when: mysqlarch_download.changed
+  notify: Restore {{ mysqldump }}
+
+# - name: Collect info about users and databases
+#   become: true
+#   community.mysql.mysql_info:
+#     filter:
+#     - users
+#     - databases
+#   register: result
+# - name: databases
+#   set_fact: 
+#     databases: "{{ result.databases }}"
+# - name: fact
+#   set_fact:  
+#     fact:  "{{ databases | json_query(query) }}"
+#   vars:
+#     query: '*'
+# - name: debug
+#   debug: 
+#     msg: "{{ item }}"
+#   with_items: 
+#     - "{{ fact }}"

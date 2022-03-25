@@ -1,30 +1,36 @@
 ---
-- name: Download dataset pgp3140_wgs_hlpanel
+- name: Ensure boto3 and botocore modules are installed
+  pip:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - boto3
+    - botocore
+
+- name: Prepare directory {{ cases_path }}
+  become: true
+  file:
+    path: "{{ cases_path }}"
+    state: directory
+    mode: 0755
+    owner: "{{ lookup('vars','ansible_user') }}"
+    group: "{{ lookup('vars','ansible_user') }}"
+
+- name: Download datasets
   amazon.aws.aws_s3:
-    bucket: forome-dataset-public
-    object: pgp3140_wgs_hlpanel.tar.gz
-    dest: /data/cases/pgp3140_wgs_hlpanel.tar.gz
+    bucket: "{{ bucket }}"
+    object: "{{ item }}"
+    dest: "{{ cases_path }}{{ item }}"
     mode: get
     overwrite: different
-    s3_url: https://s3.us-south.cloud-object-storage.appdomain.cloud
+    s3_url: "{{ endpoint_url }}"
+  with_items: "{{ datasets }}"
+  register: download_datasets
 
-- name: Extract dataset archive pgp3140_wgs_hlpanel.tar.gz
+- name: Extract archives
   ansible.builtin.unarchive:
-    src: /data/cases/pgp3140_wgs_hlpanel.tar.gz
-    dest: /data/cases/
+    src: "{{ cases_path }}{{ item }}"
+    dest: "{{ cases_path }}"
     remote_src: yes
-
-- name: Download dataset pgp3140_wgs_nist-v4.2.tar.gz
-  amazon.aws.aws_s3:
-    bucket: forome-dataset-public
-    object: pgp3140_wgs_nist-v4.2.tar.gz
-    dest: /data/cases/pgp3140_wgs_nist-v4.2.tar.gz
-    mode: get
-    overwrite: different
-    s3_url: https://s3.us-south.cloud-object-storage.appdomain.cloud
-
-- name: Extract dataset archive pgp3140_wgs_nist-v4.2.tar.gz
-  ansible.builtin.unarchive:
-    src: /data/cases/pgp3140_wgs_nist-v4.2.tar.gz
-    dest: /data/cases/
-    remote_src: yes
+  with_items: "{{ datasets }}"
+  when: download_datasets.changed

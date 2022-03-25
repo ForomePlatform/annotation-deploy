@@ -25,20 +25,20 @@
   shell: /tmp/aws/install --update
   when: awscli_unarchive.changed
 
-- name: Create and set permissions to ".aws" folder
+- name: Create and set permissions to .aws folder
   file:
     path: .aws
     state: directory
     mode: 0775
 
-- name: Deploy "credentials" file using template
+- name: Deploy credentials file using template
   template:
     src: credentials.j2
     dest: .aws/credentials
     mode: 0600
     force: true
 
-- name: Deploy "config" file using template
+- name: Deploy config file using template
   template:
     src: config.j2
     dest: .aws/config

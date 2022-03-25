@@ -2,9 +2,10 @@
 - hosts: all
   # gather_facts: no
   roles:
-  # - user
-  # - apt
-  # - awscli
-  # - copydata
-  # - copy-data
+  - user
+  - apt
+  - docker
+  - awscli
+  - copy-data
+  - copy-dataset
   - mysql
