@@ -3,7 +3,7 @@
   pip:
     name: "{{ item }}"
     state: present
-  with_items:
+  loop:
     - boto3
     - botocore
 
@@ -24,7 +24,7 @@
     mode: get
     overwrite: different
     s3_url: "{{ endpoint_url }}"
-  with_items: "{{ datasets }}"
+  loop: "{{ datasets }}"
   register: download_datasets
 
 - name: Extract archives
@@ -32,5 +32,5 @@
     src: "{{ cases_path }}{{ item }}"
     dest: "{{ cases_path }}"
     remote_src: yes
-  with_items: "{{ datasets }}"
+  loop: "{{ datasets }}"
   when: download_datasets.changed

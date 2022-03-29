@@ -1,0 +1,5 @@
+---
+user: "{{ lookup('vars','ansible_user') }}"
+uwsgi_bin: "/data/astorage/venv/bin/uwsgi"
+uwsgi_ini: "/data/astorage/uwsgi.ini"
+venv: "/data/astorage/venv/"

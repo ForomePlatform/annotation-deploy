@@ -1,0 +1,17 @@
+[Unit]
+Description=astorage
+
+[Service]
+User=forome
+Group=forome
+LimitNOFILE=20000
+ExecStart={{ uwsgi_bin }} --ini {{ uwsgi_ini }} --virtualenv {{ venv }}
+# Requires systemd version 211 or newer
+RuntimeDirectory=uwsgi
+Restart=always
+KillSignal=SIGQUIT
+Type=notify
+StandardError=syslog
+
+[Install]
+WantedBy=multi-user.target

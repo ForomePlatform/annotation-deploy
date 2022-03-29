@@ -1,0 +1,9 @@
+server {
+    server_name {{ uwsgi_host }};
+    listen 80;
+    location / {
+        include uwsgi_params;
+        uwsgi_pass {{ uwsgi_host }}:{{ uwsgi_port }};
+        uwsgi_read_timeout 300;
+    }
+}

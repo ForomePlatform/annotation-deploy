@@ -1,10 +1,11 @@
 ---
-- name: Set permissions for {{ destlocation }}
+- name: Prepare directory {{ destlocation }}
   become: true
   file:
     path: "{{ destlocation }}"
     state: directory
     mode: 0755
+    recurse: yes
     owner: "{{ lookup('vars','ansible_user') }}"
     group: "{{ lookup('vars','ansible_user') }}"
 
@@ -20,7 +21,7 @@
   until: job_result.finished
   retries: 9999
   delay: 10
-- name: Debug async status
-  debug:
-    var: job_result.stdout_lines
-  when: job_result is defined
+# - name: Debug async status
+#   debug:
+#     var: job_result.stdout_lines
+#   when: job_result is defined

@@ -1,0 +1,12 @@
+---
+pip_venv: "/data/astorage/venv"
+pip_requirements: "/data/astorage/Anfisa-Annotations/requirements.txt"
+pip_packages:
+# - wheel
+# - Cython
+- setuptools==58.0.0
+- /data/astorage/Anfisa-Annotations/a_storage/plainrocks/
+- cwlref-runner
+forome_tools_url: "https://github.com/ForomePlatform/forome_misc_tools/releases/download/v0.1.8/"
+forome_tools: "forome_tools-0.1.8-py3-none-any.whl"
+destlocation: "/data/download/"

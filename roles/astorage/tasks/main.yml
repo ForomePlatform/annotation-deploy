@@ -1,0 +1,17 @@
+---
+- name: Create astorage service
+  become: true
+  template:
+      src: astorage.conf.j2
+      dest: /etc/systemd/system/astorage.service
+      owner: "{{ user }}"
+      group: "{{ user }}"
+      mode: 0644
+
+- name: Enable astorage service
+  become: true
+  systemd:
+    name: astorage
+    daemon_reload: yes
+    enabled: yes
+    state: started

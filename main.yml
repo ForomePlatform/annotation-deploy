@@ -9,3 +9,6 @@
   - copy-data
   - copy-dataset
   - mysql
+  - nginx
+  - python
+  - astorage

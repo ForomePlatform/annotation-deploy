@@ -1,0 +1,21 @@
+---
+- name: Install nginx
+  become: true
+  apt:
+    name: "{{ item }}"
+    update_cache: yes
+    state: latest
+  loop:
+  - nginx
+  # - curl
+  # - gnupg2
+  # - ca-certificates
+  # - ubuntu-keyring
+  notify: start nginx
+
+- name: Generate nginx config
+  become: true
+  template:
+    src: uwsgi.conf.j2
+    dest: /etc/nginx/conf.d/uwsgi.conf
+  notify: restart nginx

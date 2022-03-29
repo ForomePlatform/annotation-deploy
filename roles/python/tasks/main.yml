@@ -1,0 +1,53 @@
+---
+# - name: Install dependencies
+#   become: true
+#   apt:
+#     update_cache: yes
+#     state: present
+#     name: "{{ item }}"
+#   loop:
+#   - python3-pip
+#   - python3-venv
+
+- name: Install virtualenv
+  become: true
+  pip:
+    name: virtualenv
+    executable: pip3
+
+- name: Install wheel
+  pip:
+    name: wheel
+    virtualenv: "{{ pip_venv }}"
+
+- name: Install Cython
+  pip:
+    name: Cython
+    virtualenv: "{{ pip_venv }}"
+
+- name: Install packages
+  pip:
+    name: "{{ pip_packages }}"
+    virtualenv: "{{ pip_venv }}"
+
+- name: Install requirements
+  pip:
+    requirements: "{{ pip_requirements }}"
+    virtualenv: "{{ pip_venv }}"
+
+- name: Download forome_tools
+  get_url:
+    url: "{{ forome_tools_url }}{{ forome_tools }}.gz"
+    dest: "{{ destlocation }}{{ forome_tools }}.gz"
+  register: forome_tools_download
+
+- name: Unarchive forome_tools
+  shell: "[[ -e {{ destlocation }}{{ forome_tools }} ]] || rm -f {{ destlocation }}{{ forome_tools }} && gunzip {{ destlocation }}{{ forome_tools }}.gz"
+  register: forome_tools_unarchive
+  when: forome_tools_download.changed
+
+- name: Install forome_tools
+  pip:
+    name: "{{ destlocation }}{{ forome_tools }}"
+    virtualenv: "{{ pip_venv }}"
+  when: forome_tools_unarchive.changed

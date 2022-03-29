@@ -3,7 +3,7 @@
   pip:
     name: "{{ item }}"
     state: present
-  with_items:
+  loop:
     - boto3
     - botocore
 
@@ -13,7 +13,7 @@
     name: "{{ item }}"
     state: present
     update_cache: yes
-  with_items:
+  loop:
   - mysql-server
   - mysql-client 
   - python3-mysqldb
@@ -28,7 +28,7 @@
     priv: '*.*:ALL'
     host: 'localhost'
     state: present
-  with_items: "{{ users }}"
+  loop: "{{ users }}"
 
 - name: Prepare directory {{ destlocation }}
   become: true
@@ -47,14 +47,14 @@
     mode: get
     overwrite: different
     s3_url: "{{ endpoint_url }}"
-  register: mysqlarch_download
+  # register: mysqlarch_download
 
 - name: Unarchive {{ mysqlarch }}
   unarchive:
     src: "{{ destlocation }}{{ mysqlarch }}"
     dest: "{{ destlocation }}"
     remote_src: yes
-  when: mysqlarch_download.changed
+  # when: mysqlarch_download.changed
   notify: Restore {{ mysqldump }}
 
 # - name: Collect info about users and databases
