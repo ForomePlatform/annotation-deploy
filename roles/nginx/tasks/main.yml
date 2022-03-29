@@ -2,15 +2,9 @@
 - name: Install nginx
   become: true
   apt:
-    name: "{{ item }}"
+    name: nginx
     update_cache: yes
     state: latest
-  loop:
-  - nginx
-  # - curl
-  # - gnupg2
-  # - ca-certificates
-  # - ubuntu-keyring
   notify: start nginx
 
 - name: Generate nginx config

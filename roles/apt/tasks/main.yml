@@ -29,9 +29,3 @@
   until: job_result.finished
   retries: 100
   delay: 10
-- name: Debug async status
-  become: true
-  debug:
-    var: job_result
-    verbosity: 2
-  when: job_result is defined

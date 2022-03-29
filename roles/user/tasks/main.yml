@@ -6,6 +6,7 @@
     shell: "/bin/bash"
     groups: "sudo"
     state: "present"
+
 - name: Add authorized keys
   become: true
   authorized_key:
@@ -14,6 +15,7 @@
     state: "present"
   with_fileglob:
     - "*.pub"
+
 - name: Modify /etc/sudoers
   become: true
   lineinfile:

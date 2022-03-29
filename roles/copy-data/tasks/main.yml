@@ -6,8 +6,8 @@
     state: directory
     mode: 0755
     recurse: yes
-    owner: "{{ lookup('vars','ansible_user') }}"
-    group: "{{ lookup('vars','ansible_user') }}"
+    owner: "{{ user }}"
+    group: "{{ user }}"
 
 - name: aws s3 sync {{ bucket }} to {{ destlocation }}
   shell: aws --endpoint-url {{ endpoint_url }} s3 sync s3://{{ bucket }}{{ destlocation }} {{ destlocation }}

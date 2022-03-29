@@ -1,4 +1,5 @@
 ---
+user: "{{ lookup('vars','ansible_user') }}"
 bucket: "forome-dataset-public"
 endpoint_url: "https://s3.us-south.cloud-object-storage.appdomain.cloud"
 aws_access_key: "{{ lookup('env','AWS_ACCESS_KEY_ID') }}"
@@ -7,3 +8,4 @@ cases_path: "/data/cases/"
 datasets:
 - pgp3140_wgs_hlpanel.tar.gz
 - pgp3140_wgs_nist-v4.2.tar.gz
+- pgp3140_wgs_nist-v3.3.2.tar.gz

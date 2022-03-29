@@ -52,28 +52,28 @@ resource "local_file" "ansible_inventory" {
   )
   filename = "inventory"
 }
-resource "time_sleep" "wait" {
-  depends_on = [
-    local_file.ansible_inventory
-  ]
-  create_duration = "10s"
-  triggers = {
-    always_run = timestamp()
-  }
-}
+# resource "time_sleep" "wait" {
+#   depends_on = [
+#     local_file.ansible_inventory
+#   ]
+#   create_duration = "10s"
+#   triggers = {
+#     always_run = timestamp()
+#   }
+# }
 resource "null_resource" "ansible" {
-  depends_on = [
-    time_sleep.wait
-  ]
+  # depends_on = [
+  #   time_sleep.wait
+  # ]
   triggers = {
     always_run = timestamp()
   }
-  connection {
-    type        = "ssh"
-    user        = var.user_name
-    private_key = local.ssh_private_key_file
-    host        = module.vsi.instance_ext_ip
-  }
+  # connection {
+  #   type        = "ssh"
+  #   user        = var.user_name
+  #   private_key = local.ssh_private_key_file
+  #   host        = module.vsi.instance_ext_ip
+  # }
   provisioner "local-exec" {
     interpreter = ["bash", "-c"]
     command = "ansible-playbook main.yml"

@@ -1,1 +1,2 @@
+---
 user: "{{ lookup('vars', 'ansible_user') }}"

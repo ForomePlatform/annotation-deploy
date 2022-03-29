@@ -1,3 +1,4 @@
+---
 - name: start mysql
   become: true
   service:

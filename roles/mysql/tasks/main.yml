@@ -42,38 +42,17 @@
 - name: Download {{ mysqlarch }}
   amazon.aws.aws_s3:
     bucket: "{{ bucket }}"
-    object: "{{ destlocation }}{{ mysqlarch }}"
+    object: "{{ mysqlarch }}"
     dest: "{{ destlocation }}{{ mysqlarch }}"
     mode: get
     overwrite: different
     s3_url: "{{ endpoint_url }}"
-  # register: mysqlarch_download
+  register: mysqlarch_download
 
 - name: Unarchive {{ mysqlarch }}
   unarchive:
     src: "{{ destlocation }}{{ mysqlarch }}"
     dest: "{{ destlocation }}"
     remote_src: yes
-  # when: mysqlarch_download.changed
+  when: mysqlarch_download.changed
   notify: Restore {{ mysqldump }}
-
-# - name: Collect info about users and databases
-#   become: true
-#   community.mysql.mysql_info:
-#     filter:
-#     - users
-#     - databases
-#   register: result
-# - name: databases
-#   set_fact: 
-#     databases: "{{ result.databases }}"
-# - name: fact
-#   set_fact:  
-#     fact:  "{{ databases | json_query(query) }}"
-#   vars:
-#     query: '*'
-# - name: debug
-#   debug: 
-#     msg: "{{ item }}"
-#   with_items: 
-#     - "{{ fact }}"

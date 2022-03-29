@@ -1,14 +1,4 @@
 ---
-# - name: Install dependencies
-#   become: true
-#   apt:
-#     update_cache: yes
-#     state: present
-#     name: "{{ item }}"
-#   loop:
-#   - python3-pip
-#   - python3-venv
-
 - name: Install virtualenv
   become: true
   pip:
