@@ -1,5 +1,5 @@
 ---
-- name: Ensure boto3 and botocore modules are installed
+- name: Install boto3 and botocore modules
   pip:
     name: "{{ item }}"
     state: present
@@ -20,22 +20,21 @@
   - libmysqlclient-dev
   notify: start mysql
 
-- name: creating mysql users
+- name: Creating mysql user {{ user }}
   become: true
   mysql_user:
-    name: "{{ item }}"
-    password: "{{ item }}"
+    name: "{{ user }}"
+    password: "{{ user }}"
     priv: '*.*:ALL'
     host: 'localhost'
     state: present
-  loop: "{{ users }}"
 
 - name: Prepare directory {{ destlocation }}
   become: true
   file:
     path: "{{ destlocation }}"
     state: directory
-    mode: 0755
+    mode: 0775
     owner: "{{ lookup('vars','ansible_user') }}"
     group: "{{ lookup('vars','ansible_user') }}"
 
@@ -55,4 +54,4 @@
     dest: "{{ destlocation }}"
     remote_src: yes
   when: mysqlarch_download.changed
-  notify: Restore {{ mysqldump }}
+  notify: restore mysqldump

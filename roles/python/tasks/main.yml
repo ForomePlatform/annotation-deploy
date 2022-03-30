@@ -1,4 +1,19 @@
 ---
+- name: Prepare directory {{ pip_venv }}
+  become: true
+  file:
+    path: "{{ pip_venv }}"
+    state: directory
+    mode: 0775
+    owner: "{{ user }}"
+    group: "{{ user }}"
+
+# - name: Git clone
+#   ansible.builtin.git:
+#     repo: https://github.com/ForomePlatform/Anfisa-Annotations.git
+#     dest: /data/astorage/Anfisa-Annotations
+    # version: develop
+
 - name: Install virtualenv
   become: true
   pip:
@@ -28,16 +43,16 @@
 - name: Download forome_tools
   get_url:
     url: "{{ forome_tools_url }}{{ forome_tools }}.gz"
-    dest: "{{ destlocation }}{{ forome_tools }}.gz"
+    dest: "/tmp/{{ forome_tools }}.gz"
   register: forome_tools_download
 
 - name: Unarchive forome_tools
-  shell: "[[ -e {{ destlocation }}{{ forome_tools }} ]] || rm -f {{ destlocation }}{{ forome_tools }} && gunzip {{ destlocation }}{{ forome_tools }}.gz"
+  shell: "[[ -e /tmp/{{ forome_tools }} ]] || rm -f /tmp/{{ forome_tools }} && gunzip /tmp/{{ forome_tools }}.gz"
   register: forome_tools_unarchive
   when: forome_tools_download.changed
 
 - name: Install forome_tools
   pip:
-    name: "{{ destlocation }}{{ forome_tools }}"
+    name: "/tmp/{{ forome_tools }}"
     virtualenv: "{{ pip_venv }}"
   when: forome_tools_unarchive.changed

@@ -1,4 +1,5 @@
 ---
+user: "{{ lookup('vars','ansible_user') }}"
 pip_venv: "/data/astorage/venv"
 pip_requirements: "/data/astorage/Anfisa-Annotations/requirements.txt"
 pip_packages:

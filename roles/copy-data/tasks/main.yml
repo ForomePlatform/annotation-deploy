@@ -4,23 +4,25 @@
   file:
     path: "{{ destlocation }}"
     state: directory
-    mode: 0755
+    mode: 0775
     recurse: yes
     owner: "{{ user }}"
     group: "{{ user }}"
 
 - name: aws s3 sync {{ bucket }} to {{ destlocation }}
   shell: aws --endpoint-url {{ endpoint_url }} s3 sync s3://{{ bucket }}{{ destlocation }} {{ destlocation }}
-  async: 9999
+  async: 10000
   poll: 0
   register: result
+# - debug: msg="{{ result.stdout_lines }}"
+#   when: result.stdout_lines is defined
 - name: Check aws s3 sync status
   async_status:
     jid: "{{ result.ansible_job_id }}"
   register: job_result
   until: job_result.finished
-  retries: 9999
-  delay: 10
+  retries: 10000
+  delay: 60
 # - name: Debug async status
 #   debug:
 #     var: job_result.stdout_lines

@@ -40,6 +40,12 @@ module "vsi" {
   data_disk_name = var.data_disk_name
 }
 resource "local_file" "ansible_inventory" {
+  depends_on = [
+    module.ssh.ibm_is_ssh_key,
+    module.vsi.ibm_is_volume,
+    module.vsi.ibm_is_instance,
+    module.vsi.ibm_is_floating_ip
+  ]
   content = templatefile("inventory.tpl",
     {
       basename = var.basename
@@ -62,21 +68,12 @@ resource "local_file" "ansible_inventory" {
 #   }
 # }
 resource "null_resource" "ansible_playbook" {
-  # depends_on = [
-  #   time_sleep.wait
-  # ]
   depends_on = [
     local_file.ansible_inventory
   ]
   triggers = {
     always_run = timestamp()
   }
-  # connection {
-  #   type        = "ssh"
-  #   user        = var.user_name
-  #   private_key = local.ssh_private_key_file
-  #   host        = module.vsi.instance_ext_ip
-  # }
   provisioner "local-exec" {
     interpreter = ["bash", "-c"]
     command = "ansible-playbook main.yml"

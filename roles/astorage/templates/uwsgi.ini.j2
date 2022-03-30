@@ -1,0 +1,11 @@
+[uwsgi]
+buffer-size=62768
+socket={{ uwsgi_socket }}
+chdir={{ uwsgi_dir }}
+wsgi-file={{ uwsgi_dir }}/Anfisa-Annotations/a_storage/service.py
+pythonpath={{ uwsgi_dir }}/Anfisa-Annotations/a_storage
+processes=1
+threads=1
+workers = 1
+logger=file:logfile={{ uwsgi_dir }}/logs/uwsgi.log,maxsize=25000000
+lazy

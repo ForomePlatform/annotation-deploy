@@ -1,8 +1,29 @@
 ---
+- name: Prepare directory {{ uwsgi_dir }}/logs
+  become: true
+  file:
+    path: "{{ uwsgi_dir }}/logs"
+    state: directory
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    mode: 0775
+
+- name: Create uwsgi.ini
+  template:
+      src: uwsgi.ini.j2
+      dest: /data/astorage/uwsgi.ini
+      mode: 0644
+
+- name: Create astorage.cfg
+  template:
+      src: astorage.cfg.j2
+      dest: /data/astorage/astorage.cfg
+      mode: 0644
+
 - name: Create astorage service
   become: true
   template:
-      src: astorage.conf.j2
+      src: astorage.service.j2
       dest: /etc/systemd/system/astorage.service
       owner: "{{ user }}"
       group: "{{ user }}"

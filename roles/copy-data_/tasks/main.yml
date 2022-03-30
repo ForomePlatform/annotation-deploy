@@ -11,7 +11,7 @@
   file:
     path: "{{ destlocation }}"
     state: directory
-    mode: 0755
+    mode: 0775
     owner: "{{ user }}"
     group: "{{ user }}"
 

@@ -1,0 +1,71 @@
+{
+    "frontend":{
+        "apikey": {{ frontend_apikey }}
+    },
+    "database": {
+        "hg38": "/data/annotation/database/1.0.0/annotation-hg38",
+        "hg37": "/data/annotation/database/1.0.0/annotation-hg37",
+        "pastorage": "/astorage/"
+    },
+    "source": {
+        "external":{
+            "url": {{ external_url }}
+        }
+    },
+    "connectors": {
+        "forome": {
+            "mysql": {
+                "host": {{ mysql_host }},
+                "port": {{ mysql_port }},
+                "database": "forome",
+                "user": {{ mysql_user }},
+                "password": {{ mysql_pass }}
+            }
+        },
+        "astorage": {
+            "astorage": {
+                "host": {{ astorage_host }},
+                "port": {{ astorage_port }}
+            }
+        },
+        "hgmd": {
+            "mysql": {
+                "host": {{ mysql_host }},
+                "port": {{ mysql_port }},
+                "database": "hgmd_pro",
+                "user": {{ user }},
+                "password": {{ user }}
+            }
+        },
+        "gtf": {
+            "mysql": {
+                "host": {{ mysql_host }},
+                "port": {{ mysql_port }},
+                "database": "ensembl",
+                "user": {{ user }},
+                "password": {{ user }}
+            }
+        },
+        "ref": {
+            "mysql": {
+                "host": {{ mysql_host }},
+                "port": {{ mysql_port }},
+                "database": "util",
+                "user": {{ user }},
+                "password": {{ user }}
+            }
+        }
+    },
+    "ensembl-vep": {
+        "app": {
+            "exec": "/db/vep-93/ensembl-vep/vep"
+        }
+    },
+
+    "notification": {
+        "slack": {
+            "webhook_url": {{ slack_webhook }},
+            "channel": {{ slack_channel }}
+        }
+    }
+}

@@ -10,6 +10,6 @@
   service:
     name: mysql
     state: restarted
-- name: Restore {{ mysqldump }}
+- name: restore mysqldump
   become: true
   shell: "mysql < {{ destlocation }}{{ mysqldump }}"

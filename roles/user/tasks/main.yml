@@ -3,23 +3,23 @@
   become: true
   user:
     name: "{{ user }}"
-    shell: "/bin/bash"
-    groups: "sudo"
-    state: "present"
+    shell: /bin/bash
+    groups: sudo
+    state: present
 
 - name: Add authorized keys
   become: true
   authorized_key:
     user: "{{ user }}"
     key: "{{ lookup('file', item) }}"
-    state: "present"
+    state: present
   with_fileglob:
     - "*.pub"
 
 - name: Modify /etc/sudoers
   become: true
   lineinfile:
-    dest: "/etc/sudoers"
+    dest: /etc/sudoers
     regexp: "^%sudo"
     line: "%sudo ALL=(ALL:ALL) NOPASSWD:ALL"
-    state: "present"
+    state: present

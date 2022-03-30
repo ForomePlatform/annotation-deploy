@@ -2,11 +2,10 @@
 Description=astorage
 
 [Service]
-User=forome
-Group=forome
+User={{ user }}
+Group={{ user }}
 LimitNOFILE=20000
-ExecStart={{ uwsgi_bin }} --ini {{ uwsgi_ini }} --virtualenv {{ venv }}
-# Requires systemd version 211 or newer
+ExecStart={{ uwsgi_dir }}/venv/bin/uwsgi --ini {{ uwsgi_dir }}/uwsgi.ini --virtualenv {{ uwsgi_dir }}/venv
 RuntimeDirectory=uwsgi
 Restart=always
 KillSignal=SIGQUIT

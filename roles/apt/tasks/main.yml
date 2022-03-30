@@ -1,31 +1,27 @@
 ---
 - name: Update and upgrade apt packages
   become: true
-  register: apt_result
+  register: apt_upd
   apt:
-    upgrade: yes
     update_cache: yes
-    cache_valid_time: 86400
-- name: Debug update and upgrade
-  debug:
-    var: apt_result
-    verbosity: 2
-  when: apt_result is defined
+    upgrade: yes
+    # autoremove: yes
+    # autoclean: yes
+    # cache_valid_time: 86400
+- debug:
+    msg: "{{ apt_upd.stdout_lines }}"
+  when: apt_upd.stdout_lines is defined
+
 - name: Install main packages
   become: true
   apt:
     update_cache: yes
+    # autoremove: yes
+    # autoclean: yes
     install_recommends: no
-    name: "{{ packages }}"
+    name: "{{ apt_packages }}"
     state: present
-  async: 1000
-  poll: 0
-  register: apt_sleeper
-- name: Check async status
-  become: true
-  async_status:
-    jid: "{{ apt_sleeper.ansible_job_id }}"
-  register: job_result
-  until: job_result.finished
-  retries: 100
-  delay: 10
+  register: apt_inst
+- debug:
+    msg: "{{ apt_inst.stdout_lines }}"
+  when: apt_inst.stdout_lines is defined

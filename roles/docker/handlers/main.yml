@@ -1,5 +1,5 @@
 ---
-- name: Reboot
+- name: reboot
   become: true
   reboot:
     reboot_timeout: 300

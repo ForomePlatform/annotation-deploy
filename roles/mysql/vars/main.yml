@@ -1,7 +1,5 @@
 ---
-users:
-- user
-- hgmd
+user: "{{ lookup('vars','ansible_user') }}"
 bucket: "forome-annotation"
 endpoint_url: "https://s3.us-south.cloud-object-storage.appdomain.cloud"
 aws_access_key: "{{ lookup('env','AWS_ACCESS_KEY_ID') }}"

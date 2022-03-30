@@ -7,9 +7,14 @@ bootcmd:
 - printf 'g\nn\n1\n\n\nw' | fdisk ${data_disk_name}
 - mkfs.ext4 ${var_disk_name}1 -L var
 - mkfs.ext4 ${data_disk_name}1 -L data
+- mount ${var_disk_name}1 /mnt
+- rsync -aulvXpogtr /var/lib/* /mnt
+- umount /mnt
+- rm -rf /var/lib/*
+# - mkdir /var/lib
 mounts:
-- [ "LABEL=var", "/var/lib/mysql", "ext4", "defaults", "0", "1" ]
 - [ "LABEL=data", "/data", "ext4", "defaults", "0", "1" ]
+- [ "LABEL=var", "/var/lib", "ext4", "defaults,noatime,nofail", "0", "2" ]
 users:
 - default
 - name: ${user_name}
@@ -18,10 +23,11 @@ users:
   groups: sudo
   ssh-authorized-keys:
   - ${ssh_public_key}
-# package_update: true
-# package_upgrade: true
-# package_reboot_if_required: true
-# packages:
-# - vim
-# - tmux
-# - python3
+package_update: true
+package_upgrade: true
+package_reboot_if_required: false
+packages:
+- vim
+- tmux
+- rsync
+- python3

@@ -1,5 +1,5 @@
 ---
-- name: Ensure boto3 and botocore modules are installed
+- name: Install boto3 and botocore modules
   pip:
     name: "{{ item }}"
     state: present
@@ -12,7 +12,7 @@
   file:
     path: "{{ cases_path }}"
     state: directory
-    mode: 0755
+    mode: 0775
     owner: "{{ user }}"
     group: "{{ user }}"
 
