@@ -58,15 +58,6 @@ resource "local_file" "ansible_inventory" {
   )
   filename = "inventory"
 }
-# resource "time_sleep" "wait" {
-#   depends_on = [
-#     local_file.ansible_inventory
-#   ]
-#   create_duration = "10s"
-#   triggers = {
-#     always_run = timestamp()
-#   }
-# }
 resource "null_resource" "ansible_playbook" {
   depends_on = [
     local_file.ansible_inventory

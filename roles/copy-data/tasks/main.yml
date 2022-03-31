@@ -16,7 +16,7 @@
   register: result
 # - debug: msg="{{ result.stdout_lines }}"
 #   when: result.stdout_lines is defined
-- name: Check aws s3 sync status
+- name: Syncing data ...
   async_status:
     jid: "{{ result.ansible_job_id }}"
   register: job_result

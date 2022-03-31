@@ -1,16 +1,20 @@
 ---
 - hosts: all
   gather_facts: no
+
   pre_tasks:
+
   - name: Wait for SSH
     wait_for:
       port: 22
       host: "{{ (ansible_ssh_host|default(ansible_host))|default(inventory_hostname) }}"
       search_regex: OpenSSH
-      timeout: 60
+      timeout: 600
     connection: local
+
   - name: Gathering facts
     setup:
+
   roles:
   - user
   - apt
@@ -24,3 +28,16 @@
   - astorage
   - annotation
   # - build-jar
+
+  post_tasks:
+
+  - name: Check if reboot required
+    stat:
+      path: /var/run/reboot-required
+    register: reboot_required_file
+
+  - name: Reboot if required
+    become: true
+    reboot:
+      reboot_timeout: 600
+    when: reboot_required_file.stat.exists == true

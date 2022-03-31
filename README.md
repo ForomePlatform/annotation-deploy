@@ -33,3 +33,5 @@ To destroy deployment:
 ```
 terraform apply -destroy -auto-approve
 ```
+
+***Do not forget to use VPN to be able to connect to the instance through SSH.***

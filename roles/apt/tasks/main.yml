@@ -1,16 +1,12 @@
 ---
 - name: Update and upgrade apt packages
   become: true
-  register: apt_upd
   apt:
     update_cache: yes
     upgrade: yes
     # autoremove: yes
     # autoclean: yes
-    # cache_valid_time: 86400
-- debug:
-    msg: "{{ apt_upd.stdout_lines }}"
-  when: apt_upd.stdout_lines is defined
+    cache_valid_time: 86400
 
 - name: Install main packages
   become: true
@@ -21,7 +17,3 @@
     install_recommends: no
     name: "{{ apt_packages }}"
     state: present
-  register: apt_inst
-- debug:
-    msg: "{{ apt_inst.stdout_lines }}"
-  when: apt_inst.stdout_lines is defined
