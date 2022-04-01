@@ -1,21 +1,76 @@
 ---
+- name: Install Maven
+  become: true
+  apt:
+    name: maven
+    update_cache: yes
+    state: present
+
+# - name: Install mysql-connector-java
+#   become: true
+#   apt:
+#     deb: "https://downloads.mysql.com/archives/get/p/3/file/mysql-connector-java_8.0.27-1ubuntu20.04_all.deb"
+#     state : present
+
+- name: Install python docker
+  become: true
+  pip:
+    name: docker
+
+- name: Git clone
+  ansible.builtin.git:
+    repo: https://github.com/ForomePlatform/Anfisa-Annotations.git
+    dest: /data/astorage/Anfisa-Annotations
+    version: develop
+    force: yes
+
+- name: Clear previous build {{ annotation_src_path }}/build
+  become: true
+  file:
+    path: "{{ annotation_src_path }}/build"
+    state: absent
+
+- name: Build annotation.jar in gradle container
+  community.docker.docker_container:
+    name: gradle
+    image: gradle:4.8-jdk-slim
+    user: "{{ ansible_user_uid }}:{{ ansible_user_gid }}"
+    auto_remove: yes
+    # interactive: yes
+    # tty: yes
+    volumes:
+    - "{{ annotation_src_path }}:/home/gradle"
+    command: >
+      /bin/bash -c "gradle clean --refresh-dependencies && gradle build -Pfilename=annotation.jar --refresh-dependencies"
+
+- name: Wait for build jar
+  wait_for:
+    path: "{{ annotation_src_path }}/build/libs/annotation.jar"
+
 - name: Prepare directory /data/annotation
   become: true
   file:
-    path: /data/annotation
+    path: "{{ annotation_path }}"
     state: directory
     owner: "{{ user }}"
     group: "{{ user }}"
     mode: 0775
 
-- name: Create config.json
-  template:
-    src: config.json.j2
-    dest: /data/annotation/config.json
-    mode: 0644
+- name: Copy {{ annotation_src_path }}/build/libs/annotation.jar to {{ annotation_path }}/annotation.jar
+  copy:
+    src: "{{ annotation_src_path }}/build/libs/annotation.jar"
+    dest: "{{ annotation_path }}/annotation.jar"
+    remote_src: yes
+    mode: 0775
 
 - name: Create annotation.sh
   copy:
     src: annotation.sh
-    dest: /data/annotation/annotation.sh
+    dest: "{{ annotation_path }}/annotation.sh"
     mode: 0775
+
+- name: Create config.json
+  template:
+    src: config.json.j2
+    dest: "{{ annotation_path }}/config.json"
+    mode: 0644

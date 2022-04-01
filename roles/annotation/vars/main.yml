@@ -1,9 +1,11 @@
 ---
+user: "{{ lookup('vars','ansible_user') }}"
+annotation_src_path: "/data/astorage/Anfisa-Annotations/annotation-service"
+annotation_path: "/data/annotation"
 frontend_apikey: "3dc904aa9c434e9cae4b28c2b5021101"
 external_url: "http://localhost:80"
 mysql_host: "localhost"
 mysql_port: 3306
-user: "{{ lookup('vars','ansible_user') }}"
 astorage_host: "localhost"
 astorage_port: 80
 slack_webhook: "https://hooks.slack.com/services/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"

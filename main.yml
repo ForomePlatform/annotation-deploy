@@ -27,7 +27,6 @@
   - python
   - astorage
   - annotation
-  # - build-jar
 
   post_tasks:
 
