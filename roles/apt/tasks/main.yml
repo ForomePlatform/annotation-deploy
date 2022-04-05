@@ -1,5 +1,5 @@
 ---
-- name: Update and upgrade apt packages
+- name: "Update and upgrade apt packages"
   become: true
   apt:
     update_cache: yes
@@ -8,7 +8,7 @@
     # autoclean: yes
     cache_valid_time: 86400
 
-- name: Install main packages
+- name: "Install main packages"
   become: true
   apt:
     update_cache: yes

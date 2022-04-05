@@ -1,5 +1,5 @@
 ---
-- name: Create user {{ user }}
+- name: "Create user {{ user }}"
   become: true
   user:
     name: "{{ user }}"
@@ -7,7 +7,7 @@
     groups: sudo
     state: present
 
-- name: Add authorized keys
+- name: "Add authorized keys"
   become: true
   authorized_key:
     user: "{{ user }}"
@@ -16,7 +16,7 @@
   with_fileglob:
     - "*.pub"
 
-- name: Modify /etc/sudoers
+- name: "Modify /etc/sudoers"
   become: true
   lineinfile:
     dest: /etc/sudoers

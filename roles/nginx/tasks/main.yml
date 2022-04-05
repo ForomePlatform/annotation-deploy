@@ -1,5 +1,5 @@
 ---
-- name: Install nginx
+- name: "Install nginx"
   become: true
   apt:
     name: nginx
@@ -7,7 +7,7 @@
     state: latest
   notify: start nginx
 
-- name: Generate nginx config
+- name: "Generate nginx config"
   become: true
   template:
     src: uwsgi.conf.j2

@@ -1,7 +1,9 @@
 ---
 user: "{{ lookup('vars','ansible_user') }}"
-annotation_src_path: "/data/astorage/Anfisa-Annotations/annotation-service"
-annotation_path: "/data/annotation"
+annotation_src: "/data/astorage/Anfisa-Annotations/annotation-service"
+annotation_dst: "/data/annotation"
+jar_path: "{{ annotation_dst }}/annotation.jar"
+jar_config: "{{ annotation_dst }}/config.json"
 frontend_apikey: "3dc904aa9c434e9cae4b28c2b5021101"
 external_url: "http://localhost:80"
 mysql_host: "localhost"

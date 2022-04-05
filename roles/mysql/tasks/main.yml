@@ -1,5 +1,5 @@
 ---
-- name: Install dependencies
+- name: "Install dependencies"
   become: true
   apt:
     name: "{{ item }}"
@@ -9,7 +9,7 @@
     - python3
     - python3-pip
 
-- name: Install boto3 and botocore modules
+- name: "Install boto3 and botocore modules"
   pip:
     name: "{{ item }}"
     state: present
@@ -17,7 +17,7 @@
     - boto3
     - botocore
 
-- name: Installing Mysql and dependencies
+- name: "Installing Mysql and dependencies"
   become: true
   package:
     name: "{{ item }}"
@@ -30,7 +30,7 @@
   - libmysqlclient-dev
   register: mysql_install
 
-- name: Stop mysql service
+- name: "Stop mysql service"
   become: true
   service:
     name: mysql
@@ -38,13 +38,13 @@
   register: mysql_stopped
   when: mysql_install.changed
 
-- name: Copy /var/lib/mysql to /mnt/var/mysql
+- name: "Copy /var/lib/mysql to /mnt/var/mysql"
   become: true
   shell: rsync -av /var/lib/mysql /mnt/var/
   register: mysql_var
   when: mysql_stopped.changed
 
-- name: Edit mysql config
+- name: "Edit mysql config"
   become: true
   lineinfile:
     dest: /etc/mysql/mysql.conf.d/mysqld.cnf
@@ -54,7 +54,7 @@
   register: mysql_config
   when: mysql_var.changed
 
-- name: Edit apparmor config
+- name: "Edit apparmor config"
   become: true
   replace:
     path: /etc/apparmor.d/usr.sbin.mysqld
@@ -64,21 +64,21 @@
   register: apparmor
   when: mysql_config.changed
 
-- name: Restart apparmor
+- name: "Restart apparmor"
   become: true
   service:
     name: apparmor
     state: restarted
   when: apparmor.changed
 
-- name: Restart mysql
+- name: "Restart mysql"
   become: true
   service:
     name: mysql
     state: restarted
   when: mysql_config.changed
 
-- name: Creating mysql user {{ user }}
+- name: "Creating mysql user {{ user }}"
   become: true
   mysql_user:
     name: "{{ user }}"
@@ -87,7 +87,7 @@
     host: 'localhost'
     state: present
 
-- name: Prepare directory {{ destlocation }}
+- name: "Prepare directory {{ destlocation }}"
   become: true
   file:
     path: "{{ destlocation }}"
@@ -96,7 +96,7 @@
     owner: "{{ lookup('vars','ansible_user') }}"
     group: "{{ lookup('vars','ansible_user') }}"
 
-- name: Download {{ mysqlarch }}
+- name: "Download {{ mysqlarch }}"
   amazon.aws.aws_s3:
     bucket: "{{ bucket }}"
     object: "{{ mysqlarch }}"
@@ -106,7 +106,7 @@
     s3_url: "{{ endpoint_url }}"
   register: mysqlarch_download
 
-- name: Unarchive {{ mysqlarch }}
+- name: "Unarchive {{ mysqlarch }}"
   unarchive:
     src: "{{ destlocation }}{{ mysqlarch }}"
     dest: "{{ destlocation }}"
@@ -114,7 +114,7 @@
   register: mysqlarch_unarchive
   when: mysqlarch_download.changed
 
-- name: Restore mysqldump
+- name: "Restore mysqldump"
   become: true
   shell: "mysql < {{ destlocation }}{{ mysqldump }}"
   when: mysqlarch_unarchive.changed

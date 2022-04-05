@@ -1,76 +1,67 @@
 ---
-- name: Install Maven
-  become: true
-  apt:
-    name: maven
-    update_cache: yes
-    state: present
-
-# - name: Install mysql-connector-java
-#   become: true
-#   apt:
-#     deb: "https://downloads.mysql.com/archives/get/p/3/file/mysql-connector-java_8.0.27-1ubuntu20.04_all.deb"
-#     state : present
-
-- name: Install python docker
+- name: "Install python docker"
   become: true
   pip:
     name: docker
 
-- name: Git clone
+- name: "Git clone"
   ansible.builtin.git:
     repo: https://github.com/ForomePlatform/Anfisa-Annotations.git
     dest: /data/astorage/Anfisa-Annotations
     version: develop
     force: yes
 
-- name: Clear previous build {{ annotation_src_path }}/build
+- name: "Clear previous build {{ annotation_src }}/build"
   become: true
   file:
-    path: "{{ annotation_src_path }}/build"
+    path: "{{ annotation_src }}/build"
     state: absent
 
-- name: Build annotation.jar in gradle container
+- name: "Start gradle container"
   community.docker.docker_container:
     name: gradle
-    image: gradle:4.8-jdk-slim
+    image: gradle:6.9.2-jdk11
     user: "{{ ansible_user_uid }}:{{ ansible_user_gid }}"
     auto_remove: yes
-    # interactive: yes
-    # tty: yes
     volumes:
-    - "{{ annotation_src_path }}:/home/gradle"
+    - "{{ annotation_src }}:/home/gradle"
     command: >
-      /bin/bash -c "gradle clean --refresh-dependencies && gradle build -Pfilename=annotation.jar --refresh-dependencies"
+      /bin/bash -c "gradle clean build -Pfilename=annotation.jar"
+  register: gradle_status
 
-- name: Wait for build jar
+- name: "Save gradle container status"
+  set_fact:
+    gradle_pid: "{{ gradle_status.container.State.Pid }}"
+
+- name: "Wait for gradle build (container PID: {{ gradle_pid }})"
   wait_for:
-    path: "{{ annotation_src_path }}/build/libs/annotation.jar"
+    path: "/proc/{{ gradle_pid }}/status"
+    state: absent
 
-- name: Prepare directory /data/annotation
+- name: Prepare directory {{ annotation_dst }}
   become: true
   file:
-    path: "{{ annotation_path }}"
+    path: "{{ annotation_dst }}"
     state: directory
     owner: "{{ user }}"
     group: "{{ user }}"
     mode: 0775
 
-- name: Copy {{ annotation_src_path }}/build/libs/annotation.jar to {{ annotation_path }}/annotation.jar
+- name: "Copy {{ annotation_src }}/build/libs/annotation.jar to {{ annotation_dst }}/annotation.jar"
   copy:
-    src: "{{ annotation_src_path }}/build/libs/annotation.jar"
-    dest: "{{ annotation_path }}/annotation.jar"
+    src: "{{ annotation_src }}/build/libs/annotation.jar"
+    dest: "{{ annotation_dst }}/annotation.jar"
     remote_src: yes
     mode: 0775
 
-- name: Create annotation.sh
-  copy:
-    src: annotation.sh
-    dest: "{{ annotation_path }}/annotation.sh"
+- name: "Create annotation.sh"
+  template:
+    src: annotation.sh.j2
+    dest: "{{ annotation_dst }}/annotation.sh"
     mode: 0775
 
-- name: Create config.json
+- name: "Create config.json"
   template:
     src: config.json.j2
-    dest: "{{ annotation_path }}/config.json"
+    dest: "{{ annotation_dst }}/config.json"
     mode: 0644

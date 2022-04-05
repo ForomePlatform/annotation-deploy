@@ -1,5 +1,5 @@
 ---
-- name: Prepare directory {{ pip_venv }}
+- name: "Prepare directory {{ pip_venv }}"
   become: true
   file:
     path: "{{ pip_venv }}"
@@ -8,50 +8,50 @@
     owner: "{{ user }}"
     group: "{{ user }}"
 
-# - name: Git clone
+# - name: "Git clone"
 #   ansible.builtin.git:
 #     repo: https://github.com/ForomePlatform/Anfisa-Annotations.git
 #     dest: /data/astorage/Anfisa-Annotations
     # version: develop
 
-- name: Install virtualenv
+- name: "Install virtualenv"
   become: true
   pip:
     name: virtualenv
     executable: pip3
 
-- name: Install wheel
+- name: "Install wheel"
   pip:
     name: wheel
     virtualenv: "{{ pip_venv }}"
 
-- name: Install Cython
+- name: "Install Cython"
   pip:
     name: Cython
     virtualenv: "{{ pip_venv }}"
 
-- name: Install packages
+- name: "Install packages"
   pip:
     name: "{{ pip_packages }}"
     virtualenv: "{{ pip_venv }}"
 
-- name: Install requirements
+- name: "Install requirements"
   pip:
     requirements: "{{ pip_requirements }}"
     virtualenv: "{{ pip_venv }}"
 
-- name: Download forome_tools
+- name: "Download forome_tools"
   get_url:
     url: "{{ forome_tools_url }}{{ forome_tools }}.gz"
     dest: "/tmp/{{ forome_tools }}.gz"
   register: forome_tools_download
 
-- name: Unarchive forome_tools
+- name: "Unarchive forome_tools"
   shell: "[[ -e /tmp/{{ forome_tools }} ]] || rm -f /tmp/{{ forome_tools }} && gunzip /tmp/{{ forome_tools }}.gz"
   register: forome_tools_unarchive
   when: forome_tools_download.changed
 
-- name: Install forome_tools
+- name: "Install forome_tools"
   pip:
     name: "/tmp/{{ forome_tools }}"
     virtualenv: "{{ pip_venv }}"

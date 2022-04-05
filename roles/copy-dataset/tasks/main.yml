@@ -1,5 +1,5 @@
 ---
-- name: Install boto3 and botocore modules
+- name: "Install boto3 and botocore modules"
   pip:
     name: "{{ item }}"
     state: present
@@ -7,7 +7,7 @@
     - boto3
     - botocore
 
-- name: Prepare directory {{ cases_path }}
+- name: "Prepare directory {{ cases_path }}"
   become: true
   file:
     path: "{{ cases_path }}"
@@ -16,7 +16,7 @@
     owner: "{{ user }}"
     group: "{{ user }}"
 
-- name: Download datasets
+- name: "Download datasets"
   amazon.aws.aws_s3:
     bucket: "{{ bucket }}"
     object: "{{ item }}"
@@ -27,7 +27,7 @@
   loop: "{{ datasets }}"
   register: download_datasets
 
-- name: Extract archives
+- name: "Extract archives"
   ansible.builtin.unarchive:
     src: "{{ cases_path }}{{ item }}"
     dest: "{{ cases_path }}"

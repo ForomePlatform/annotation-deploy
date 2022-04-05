@@ -1,5 +1,5 @@
 ---
-- name: Prepare directory {{ uwsgi_dir }}/logs
+- name: "Prepare directory {{ uwsgi_dir }}/logs"
   become: true
   file:
     path: "{{ uwsgi_dir }}/logs"
@@ -8,19 +8,19 @@
     group: "{{ user }}"
     mode: 0775
 
-- name: Create uwsgi.ini
+- name: "Create uwsgi.ini"
   template:
       src: uwsgi.ini.j2
       dest: /data/astorage/uwsgi.ini
       mode: 0644
 
-- name: Create astorage.cfg
+- name: "Create astorage.cfg"
   template:
       src: astorage.cfg.j2
       dest: /data/astorage/astorage.cfg
       mode: 0644
 
-- name: Create astorage service
+- name: "Create astorage service"
   become: true
   template:
       src: astorage.service.j2
@@ -29,7 +29,7 @@
       group: "{{ user }}"
       mode: 0644
 
-- name: Enable astorage service
+- name: "Enable astorage service"
   become: true
   systemd:
     name: astorage

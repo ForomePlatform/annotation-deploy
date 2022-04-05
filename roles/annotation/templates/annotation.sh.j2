@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+java -cp {{ jar_path }} org.forome.annotation.annotator.main.AnnotatorMainFork -config {{ jar_config }} -inventory "$1" "${@:2}"

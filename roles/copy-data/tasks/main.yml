@@ -1,5 +1,5 @@
 ---
-- name: Prepare directory {{ destlocation }}
+- name: "Prepare directory {{ destlocation }}"
   become: true
   file:
     path: "{{ destlocation }}"
@@ -9,21 +9,17 @@
     owner: "{{ user }}"
     group: "{{ user }}"
 
-- name: aws s3 sync {{ bucket }} to {{ destlocation }}
+- name: "aws s3 sync {{ bucket }} to {{ destlocation }}"
   shell: aws --endpoint-url {{ endpoint_url }} s3 sync s3://{{ bucket }}{{ destlocation }} {{ destlocation }}
   async: 10000
   poll: 0
   register: result
 # - debug: msg="{{ result.stdout_lines }}"
 #   when: result.stdout_lines is defined
-- name: Syncing data ...
+- name: "Syncing data ..."
   async_status:
     jid: "{{ result.ansible_job_id }}"
   register: job_result
   until: job_result.finished
   retries: 10000
   delay: 60
-# - name: Debug async status
-#   debug:
-#     var: job_result.stdout_lines
-#   when: job_result is defined

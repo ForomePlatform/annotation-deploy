@@ -1,18 +1,18 @@
 ---
-- name: Install dependencies
+- name: "Install dependencies"
   package:
     name: "{{ item }}"
     state: present
   with_items:
     - unzip
 
-- name: Download awscli
+- name: "Download awscli"
   get_url:
     url: https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
     dest: /tmp/awscliv2.zip
   register: awscli_download
 
-- name: Unarchive installer
+- name: "Unarchive installer"
   unarchive:
     src: /tmp/awscliv2.zip
     dest: /tmp
@@ -20,25 +20,25 @@
   when: awscli_download.changed
   register: awscli_unarchive
 
-- name: Install awscli
+- name: "Install awscli"
   become: true
   shell: /tmp/aws/install --update
   when: awscli_unarchive.changed
 
-- name: Create and set permissions to .aws folder
+- name: "Create and set permissions to .aws folder"
   file:
     path: .aws
     state: directory
     mode: 0775
 
-- name: Deploy credentials file using template
+- name: "Deploy credentials file using template"
   template:
     src: credentials.j2
     dest: .aws/credentials
     mode: 0600
     force: true
 
-- name: Deploy config file using template
+- name: "Deploy config file using template"
   template:
     src: config.j2
     dest: .aws/config
