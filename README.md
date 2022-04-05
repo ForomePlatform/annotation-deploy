@@ -11,8 +11,8 @@ export IC_API_KEY=$(grep '"apikey":' terraform_key.json | sed 's/.*: "\(.*\)".*/
 
 Set aws s3 credentials:
 ```bash
-export AWS_ACCESS_KEY=<AWS_ACCESS_KEY>
-export AWS_SECRET_KEY=<AWS_SECRET_KEY>
+export AWS_ACCESS_KEY_ID=<AWS_ACCESS_KEY>
+export AWS_SECRET_ACCESS_KEY=<AWS_SECRET_KEY>
 ```
 
 Copy `terraform.tfvars.example` to `terraform.tfvars` and reassign variables if necessary.
