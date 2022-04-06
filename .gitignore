@@ -18,5 +18,6 @@ crash.log
 **/*.pem
 **/*.key
 **/*key.json
+*.env
 # Ansible
 inventory
