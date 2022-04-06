@@ -1,18 +1,19 @@
 ---
-- name: "Prepare directory {{ pip_venv }}"
+- name: "Prepare directory {{ py_venv }}"
   become: true
   file:
-    path: "{{ pip_venv }}"
+    path: "{{ py_venv }}"
     state: directory
     mode: 0775
     owner: "{{ user }}"
     group: "{{ user }}"
 
-# - name: "Git clone"
-#   ansible.builtin.git:
-#     repo: https://github.com/ForomePlatform/Anfisa-Annotations.git
-#     dest: /data/astorage/Anfisa-Annotations
-    # version: develop
+- name: "Git clone {{ annotation_git_repo }}"
+  ansible.builtin.git:
+    repo: "{{ annotation_git_repo }}"
+    dest: "{{ astorage_dir }}/Anfisa-Annotations"
+    version: "{{ annotation_git_branch }}"
+    force: yes
 
 - name: "Install virtualenv"
   become: true
@@ -23,36 +24,40 @@
 - name: "Install wheel"
   pip:
     name: wheel
-    virtualenv: "{{ pip_venv }}"
+    virtualenv: "{{ py_venv }}"
 
 - name: "Install Cython"
   pip:
     name: Cython
-    virtualenv: "{{ pip_venv }}"
+    virtualenv: "{{ py_venv }}"
 
 - name: "Install packages"
   pip:
-    name: "{{ pip_packages }}"
-    virtualenv: "{{ pip_venv }}"
+    name: "{{ item }}"
+    virtualenv: "{{ py_venv }}"
+  loop:
+    - setuptools==58.0.0
+    - "{{ astorage_dir }}/Anfisa-Annotations/a_storage/plainrocks/"
+    - cwlref-runner
 
 - name: "Install requirements"
   pip:
-    requirements: "{{ pip_requirements }}"
-    virtualenv: "{{ pip_venv }}"
+    requirements: "{{ py_requirements }}"
+    virtualenv: "{{ py_venv }}"
 
 - name: "Download forome_tools"
   get_url:
-    url: "{{ forome_tools_url }}{{ forome_tools }}.gz"
-    dest: "/tmp/{{ forome_tools }}.gz"
+    url: "{{ forome_tools_url }}"
+    dest: "/tmp/{{ forome_tools_whl }}.gz"
   register: forome_tools_download
 
 - name: "Unarchive forome_tools"
-  shell: "[[ -e /tmp/{{ forome_tools }} ]] || rm -f /tmp/{{ forome_tools }} && gunzip /tmp/{{ forome_tools }}.gz"
+  shell: "[[ -e /tmp/{{ forome_tools_whl }} ]] || rm -f /tmp/{{ forome_tools_whl }} && gunzip /tmp/{{ forome_tools_whl }}.gz"
   register: forome_tools_unarchive
   when: forome_tools_download.changed
 
 - name: "Install forome_tools"
   pip:
-    name: "/tmp/{{ forome_tools }}"
-    virtualenv: "{{ pip_venv }}"
+    name: "/tmp/{{ forome_tools_whl }}"
+    virtualenv: "{{ py_venv }}"
   when: forome_tools_unarchive.changed

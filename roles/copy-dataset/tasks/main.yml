@@ -7,30 +7,33 @@
     - boto3
     - botocore
 
-- name: "Prepare directory {{ cases_path }}"
+- name: "Prepare directories"
   become: true
   file:
-    path: "{{ cases_path }}"
+    path: "{{ item }}"
     state: directory
     mode: 0775
     owner: "{{ user }}"
     group: "{{ user }}"
+  loop:
+    - "{{ download_dir }}"
+    - "{{ cases_dir }}"
 
 - name: "Download datasets"
   amazon.aws.aws_s3:
-    bucket: "{{ bucket }}"
+    bucket: "{{ bucket_dataset }}"
+    s3_url: "{{ endpoint_url }}"
     object: "{{ item }}"
-    dest: "{{ cases_path }}{{ item }}"
+    dest: "{{ download_dir }}/{{ item }}"
     mode: get
     overwrite: different
-    s3_url: "{{ endpoint_url }}"
   loop: "{{ datasets }}"
   register: download_datasets
 
 - name: "Extract archives"
   ansible.builtin.unarchive:
-    src: "{{ cases_path }}{{ item }}"
-    dest: "{{ cases_path }}"
+    src: "{{ download_dir }}/{{ item }}"
+    dest: "{{ cases_dir }}"
     remote_src: yes
   loop: "{{ datasets }}"
   when: download_datasets.changed

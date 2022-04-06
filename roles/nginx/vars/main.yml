@@ -1,3 +1,0 @@
----
-uwsgi_host: "localhost"
-uwsgi_port: 8290

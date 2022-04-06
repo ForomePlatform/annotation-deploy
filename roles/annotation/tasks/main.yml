@@ -4,11 +4,11 @@
   pip:
     name: docker
 
-- name: "Git clone"
+- name: "Git clone {{ annotation_git_repo }}"
   ansible.builtin.git:
-    repo: https://github.com/ForomePlatform/Anfisa-Annotations.git
-    dest: /data/astorage/Anfisa-Annotations
-    version: develop
+    repo: "{{ annotation_git_repo }}"
+    dest: "{{ astorage_dir }}/Anfisa-Annotations"
+    version: "{{ annotation_git_branch }}"
     force: yes
 
 - name: "Clear previous build {{ annotation_src }}/build"
@@ -17,51 +17,51 @@
     path: "{{ annotation_src }}/build"
     state: absent
 
-- name: "Start gradle container"
-  community.docker.docker_container:
-    name: gradle
-    image: gradle:6.9.2-jdk11
-    user: "{{ ansible_user_uid }}:{{ ansible_user_gid }}"
-    auto_remove: yes
-    volumes:
-    - "{{ annotation_src }}:/home/gradle"
-    command: >
-      /bin/bash -c "gradle clean build -Pfilename=annotation.jar"
-  register: gradle_status
+# - name: "Start gradle container"
+#   community.docker.docker_container:
+#     name: gradle
+#     image: gradle:6.9.2-jdk11
+#     user: "{{ ansible_user_uid }}:{{ ansible_user_gid }}"
+#     auto_remove: yes
+#     volumes:
+#     - "{{ annotation_src }}:/home/gradle"
+#     command: >
+#       /bin/bash -c "gradle clean build -Pfilename=annotation.jar"
+#   register: gradle_status
 
-- name: "Save gradle container status"
-  set_fact:
-    gradle_pid: "{{ gradle_status.container.State.Pid }}"
+# - name: "Save gradle container status"
+#   set_fact:
+#     gradle_pid: "{{ gradle_status.container.State.Pid }}"
 
-- name: "Wait for gradle build (container PID: {{ gradle_pid }})"
-  wait_for:
-    path: "/proc/{{ gradle_pid }}/status"
-    state: absent
+# - name: "Wait for gradle build (container PID: {{ gradle_pid }})"
+#   wait_for:
+#     path: "/proc/{{ gradle_pid }}/status"
+#     state: absent
 
-- name: Prepare directory {{ annotation_dst }}
+- name: Prepare directory {{ annotation_dir }}
   become: true
   file:
-    path: "{{ annotation_dst }}"
+    path: "{{ annotation_dir }}"
     state: directory
     owner: "{{ user }}"
     group: "{{ user }}"
     mode: 0775
 
-- name: "Copy {{ annotation_src }}/build/libs/annotation.jar to {{ annotation_dst }}/annotation.jar"
-  copy:
-    src: "{{ annotation_src }}/build/libs/annotation.jar"
-    dest: "{{ annotation_dst }}/annotation.jar"
-    remote_src: yes
-    mode: 0775
+# - name: "Copy {{ annotation_src }}/build/libs/annotation.jar to {{ annotation_dir }}/annotation.jar"
+#   copy:
+#     src: "{{ annotation_src }}/build/libs/annotation.jar"
+#     dest: "{{ annotation_dir }}/annotation.jar"
+#     remote_src: yes
+#     mode: 0775
 
 - name: "Create annotation.sh"
   template:
     src: annotation.sh.j2
-    dest: "{{ annotation_dst }}/annotation.sh"
+    dest: "{{ annotation_dir }}/annotation.sh"
     mode: 0775
 
 - name: "Create config.json"
   template:
     src: config.json.j2
-    dest: "{{ annotation_dst }}/config.json"
+    dest: "{{ annotation_dir }}/config.json"
     mode: 0644

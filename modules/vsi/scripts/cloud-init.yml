@@ -15,7 +15,7 @@ bootcmd:
 - mkdir -p /mnt/var
 mounts:
 - [ "LABEL=data", "/data", "ext4", "defaults", "0", "1" ]
-- [ "LABEL=var", "/mnt/var", "ext4", "defaults", "0", "2" ]
+- [ "LABEL=var", "/mnt/var", "ext4", "defaults,noatime,nofail", "0", "2" ]
 # - [ "LABEL=var", "/var/lib", "ext4", "defaults,noatime,nofail", "0", "2" ]
 users:
 - default

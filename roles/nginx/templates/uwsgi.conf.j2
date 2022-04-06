@@ -1,6 +1,6 @@
 server {
-    server_name {{ uwsgi_host }};
-    listen 80;
+    server_name {{ nginx_host }};
+    listen {{ nginx_port }};
     location / {
         include uwsgi_params;
         uwsgi_pass {{ uwsgi_host }}:{{ uwsgi_port }};

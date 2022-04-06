@@ -5,6 +5,7 @@
     name: nginx
     state: started
     enabled: yes
+
 - name: "restart nginx"
   become: true
   service:

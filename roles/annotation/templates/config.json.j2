@@ -9,7 +9,7 @@
     },
     "source": {
         "external":{
-            "url": "{{ external_url }}"
+            "url": "http://{{ nginx_host }}:{{ nginx_port }}"
         }
     },
     "connectors": {
@@ -24,8 +24,8 @@
         },
         "astorage": {
             "astorage": {
-                "host": "{{ astorage_host }}",
-                "port": "{{ astorage_port }}"
+                "host": "{{ nginx_host }}",
+                "port": "{{ nginx_port }}"
             }
         },
         "hgmd": {

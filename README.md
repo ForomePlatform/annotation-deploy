@@ -21,6 +21,17 @@ export MYSQL_USER=<MYSQL_USER>
 export MYSQL_PASSWORD=<MYSQL_PASSWORD>
 ```
 
+Set frontend apikey:
+```bash
+export FRONTEND_APIKEY=<FRONTEND_APIKEY>
+```
+
+Set slack webhook and channel:
+```bash
+export SLACK_WEBHOOK=<SLACK_WEBHOOK>
+export SLACK_CHANNEL=<SLACK_CHANNEL>
+```
+
 Copy `terraform.tfvars.example` to `terraform.tfvars` and reassign variables if necessary.
 
 Deploy with terraform (ansible playbook will be run automatically):

@@ -24,10 +24,10 @@
     state: present
     update_cache: yes
   loop:
-  - mysql-server
-  - mysql-client 
-  - python3-mysqldb
-  - libmysqlclient-dev
+    - mysql-server
+    - mysql-client 
+    - python3-mysqldb
+    - libmysqlclient-dev
   register: mysql_install
 
 - name: "Stop mysql service"
@@ -78,7 +78,7 @@
     state: restarted
   when: mysql_config.changed
 
-- name: "Creating mysql user {{ user }}"
+- name: "Creating mysql user {{ mysql_user }}"
   become: true
   mysql_user:
     name: "{{ mysql_user }}"
@@ -87,34 +87,28 @@
     host: 'localhost'
     state: present
 
-- name: "Prepare directory {{ destlocation }}"
+- name: "Prepare directory {{ download_dir }}"
   become: true
   file:
-    path: "{{ destlocation }}"
+    path: "{{ download_dir }}"
     state: directory
     mode: 0775
     owner: "{{ user }}"
     group: "{{ user }}"
 
-- name: "Download {{ mysqlarch }}"
+- name: "Download mysqldump.sql.gz"
   amazon.aws.aws_s3:
-    bucket: "{{ bucket }}"
-    object: "{{ mysqlarch }}"
-    dest: "{{ destlocation }}{{ mysqlarch }}"
+    bucket: "{{bucket_annotation}}"
+    object: "mysqldump.sql.gz"
+    dest: "{{ download_dir }}/mysqldump.sql.gz"
     mode: get
     overwrite: different
     s3_url: "{{ endpoint_url }}"
-  register: mysqlarch_download
+  register: mysqldump_download
 
-- name: "Unarchive {{ mysqlarch }}"
-  unarchive:
-    src: "{{ destlocation }}{{ mysqlarch }}"
-    dest: "{{ destlocation }}"
-    remote_src: yes
-  register: mysqlarch_unarchive
-  when: mysqlarch_download.changed
-
-- name: "Restore mysqldump"
+- name: "Restore databases"
   become: true
-  shell: "mysql < {{ destlocation }}{{ mysqldump }}"
-  when: mysqlarch_unarchive.changed
+  shell: "gunzip < {{ download_dir }}/mysqldump.sql.gz | mysql"
+  # shell: "mysql < {{ download_dir }}/{{ mysqldump }}"
+  # when: mysqldump_unarchive.changed
+  when: mysqldump_download.changed

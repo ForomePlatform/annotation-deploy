@@ -1,21 +1,20 @@
 ---
-- name: "Prepare directory {{ destlocation }}"
+- name: "Prepare directory {{ data_dir }}"
   become: true
   file:
-    path: "{{ destlocation }}"
+    path: "{{ data_dir }}"
     state: directory
     mode: 0775
     recurse: yes
     owner: "{{ user }}"
     group: "{{ user }}"
 
-- name: "aws s3 sync {{ bucket }} to {{ destlocation }}"
-  shell: aws --endpoint-url {{ endpoint_url }} s3 sync s3://{{ bucket }}{{ destlocation }} {{ destlocation }}
+- name: "aws s3 sync {{ bucket_annotation }} to {{ data_dir }}"
+  shell: "aws --endpoint-url {{ endpoint_url }} s3 sync s3://{{ bucket_annotation }}/{{ data_dir }} {{ data_dir }}"
   async: 10000
   poll: 0
   register: result
-# - debug: msg="{{ result.stdout_lines }}"
-#   when: result.stdout_lines is defined
+
 - name: "Syncing data ..."
   async_status:
     jid: "{{ result.ansible_job_id }}"

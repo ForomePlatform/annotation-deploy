@@ -1,7 +1,7 @@
 {
     "file-path-def": {
-        "LOAD": "{{ load }}",
-        "WORK": "{{ uwsgi_dir }}"
+        "LOAD": "{{ download_dir }}",
+        "WORK": "{{ astorage_dir }}"
     },
 
     "stderr": "${WORK}/logs/err.log",
@@ -97,8 +97,8 @@
         }
     },
 
-    "host": "{{ astorage_host }}",
-    "port": "{{ astorage_port }}",
+    "host": "{{ nginx_host }}",
+    "port": "{{ nginx_port }}",
     "html-base": "/",
     "dir-files": [],
     "logging": {

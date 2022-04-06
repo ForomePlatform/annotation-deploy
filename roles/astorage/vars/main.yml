@@ -1,7 +1,0 @@
----
-user: "{{ lookup('vars','ansible_user') }}"
-uwsgi_dir: "/data/astorage"
-uwsgi_socket: "127.0.0.1:8290"
-load: "/data/download"
-astorage_host: "localhost"
-astorage_port: 80
