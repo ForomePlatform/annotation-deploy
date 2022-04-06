@@ -81,8 +81,8 @@
 - name: "Creating mysql user {{ user }}"
   become: true
   mysql_user:
-    name: "{{ user }}"
-    password: "{{ user }}"
+    name: "{{ mysql_user }}"
+    password: "{{ mysql_password }}"
     priv: '*.*:ALL'
     host: 'localhost'
     state: present
@@ -93,8 +93,8 @@
     path: "{{ destlocation }}"
     state: directory
     mode: 0775
-    owner: "{{ lookup('vars','ansible_user') }}"
-    group: "{{ lookup('vars','ansible_user') }}"
+    owner: "{{ user }}"
+    group: "{{ user }}"
 
 - name: "Download {{ mysqlarch }}"
   amazon.aws.aws_s3:

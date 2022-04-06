@@ -1,5 +1,7 @@
 ---
 user: "{{ lookup('vars','ansible_user') }}"
+mysql_user: "{{ lookup('env','MYSQL_USER') }}"
+mysql_password: "{{ lookup('env','MYSQL_PASSWORD') }}"
 bucket: "forome-annotation"
 endpoint_url: "https://s3.us-south.cloud-object-storage.appdomain.cloud"
 aws_access_key: "{{ lookup('env','AWS_ACCESS_KEY_ID') }}"

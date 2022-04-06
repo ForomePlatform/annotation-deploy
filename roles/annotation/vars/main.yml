@@ -1,5 +1,7 @@
 ---
 user: "{{ lookup('vars','ansible_user') }}"
+mysql_user: "{{ lookup('env','MYSQL_USER') }}"
+mysql_password: "{{ lookup('env','MYSQL_PASSWORD') }}"
 annotation_src: "/data/astorage/Anfisa-Annotations/annotation-service"
 annotation_dst: "/data/annotation"
 jar_path: "{{ annotation_dst }}/annotation.jar"
