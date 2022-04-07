@@ -32,6 +32,12 @@ export SLACK_WEBHOOK=<SLACK_WEBHOOK>
 export SLACK_CHANNEL=<SLACK_CHANNEL>
 ```
 
+Or you can set all of environments above in .env file.
+Copy `.env.example` to `.env` and set environments:
+```shell
+source .env
+```
+
 Copy `terraform.tfvars.example` to `terraform.tfvars` and reassign variables if necessary.
 
 Deploy with terraform (ansible playbook will be run automatically):

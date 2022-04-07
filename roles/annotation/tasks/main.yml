@@ -17,26 +17,26 @@
     path: "{{ annotation_src }}/build"
     state: absent
 
-# - name: "Start gradle container"
-#   community.docker.docker_container:
-#     name: gradle
-#     image: gradle:6.9.2-jdk11
-#     user: "{{ ansible_user_uid }}:{{ ansible_user_gid }}"
-#     auto_remove: yes
-#     volumes:
-#     - "{{ annotation_src }}:/home/gradle"
-#     command: >
-#       /bin/bash -c "gradle clean build -Pfilename=annotation.jar"
-#   register: gradle_status
+- name: "Start gradle container"
+  community.docker.docker_container:
+    name: gradle
+    image: gradle:6.9.2-jdk11
+    user: "{{ ansible_user_uid }}:{{ ansible_user_gid }}"
+    auto_remove: yes
+    volumes:
+    - "{{ annotation_src }}:/home/gradle"
+    command: >
+      /bin/bash -c "gradle clean build -Pfilename=annotation.jar"
+  register: gradle_status
 
-# - name: "Save gradle container status"
-#   set_fact:
-#     gradle_pid: "{{ gradle_status.container.State.Pid }}"
+- name: "Save gradle container status"
+  set_fact:
+    gradle_pid: "{{ gradle_status.container.State.Pid }}"
 
-# - name: "Wait for gradle build (container PID: {{ gradle_pid }})"
-#   wait_for:
-#     path: "/proc/{{ gradle_pid }}/status"
-#     state: absent
+- name: "Wait for gradle build (container PID: {{ gradle_pid }})"
+  wait_for:
+    path: "/proc/{{ gradle_pid }}/status"
+    state: absent
 
 - name: Prepare directory {{ annotation_dir }}
   become: true
@@ -47,12 +47,12 @@
     group: "{{ user }}"
     mode: 0775
 
-# - name: "Copy {{ annotation_src }}/build/libs/annotation.jar to {{ annotation_dir }}/annotation.jar"
-#   copy:
-#     src: "{{ annotation_src }}/build/libs/annotation.jar"
-#     dest: "{{ annotation_dir }}/annotation.jar"
-#     remote_src: yes
-#     mode: 0775
+- name: "Copy {{ annotation_src }}/build/libs/annotation.jar to {{ annotation_dir }}/annotation.jar"
+  copy:
+    src: "{{ annotation_src }}/build/libs/annotation.jar"
+    dest: "{{ annotation_dir }}/annotation.jar"
+    remote_src: yes
+    mode: 0775
 
 - name: "Create annotation.sh"
   template:

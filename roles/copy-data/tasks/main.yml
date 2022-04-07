@@ -10,7 +10,7 @@
     group: "{{ user }}"
 
 - name: "aws s3 sync {{ bucket_annotation }} to {{ data_dir }}"
-  shell: "aws --endpoint-url {{ endpoint_url }} s3 sync s3://{{ bucket_annotation }}/{{ data_dir }} {{ data_dir }}"
+  shell: "aws --endpoint-url {{ endpoint_url }} s3 sync s3://{{ bucket_annotation }}{{ data_dir }} {{ data_dir }}"
   async: 10000
   poll: 0
   register: result
