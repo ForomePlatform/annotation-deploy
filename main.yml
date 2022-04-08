@@ -11,6 +11,9 @@
         search_regex: OpenSSH
         timeout: 600
       connection: local
+    
+    - debug:
+        msg: "{{ mysql_user }}"
 
     - name: "Gathering facts"
       setup:
