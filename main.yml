@@ -11,24 +11,19 @@
         search_regex: OpenSSH
         timeout: 600
       connection: local
-    
-    - debug:
-        msg: |
-          env MYSQL_USER: {{ lookup('env','MYSQL_USER') }}
-          ansible_ssh_host: {{ ansible_ssh_host }}
 
     - name: "Gathering facts"
       setup:
 
   roles:
-    # - user
-    # - apt
-    # - docker
-    # - awscli
-    # - mysql
-    # - copy-data
-    # - copy-dataset
-    # - nginx
-    # - python
-    # - astorage
+    - user
+    - apt
+    - docker
+    - awscli
+    - mysql
+    - copy-data
+    - copy-dataset
+    - nginx
+    - python
+    - astorage
     - annotation
