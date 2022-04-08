@@ -46,9 +46,6 @@ resource "local_file" "ansible_inventory" {
     module.vsi.ibm_is_instance,
     module.vsi.ibm_is_floating_ip
   ]
-  triggers = {
-    always_run = timestamp()
-  }
   content = templatefile("inventory.tpl",
     {
       basename = var.basename
