@@ -13,7 +13,9 @@
       connection: local
     
     - debug:
-        msg: "{{ mysql_user }}"
+        msg: |
+          env MYSQL_USER: {{ lookup('env','MYSQL_USER') }}
+          ansible_ssh_host: {{ ansible_ssh_host }}
 
     - name: "Gathering facts"
       setup:
