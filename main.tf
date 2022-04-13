@@ -60,13 +60,21 @@ resource "local_file" "ansible_inventory" {
 }
 resource "null_resource" "ansible_playbook" {
   depends_on = [
+    module.ssh.ibm_is_ssh_key,
+    module.vsi.ibm_is_volume,
+    module.vsi.ibm_is_instance,
+    module.vsi.ibm_is_floating_ip,
     local_file.ansible_inventory
   ]
-  triggers = {
-    always_run = timestamp()
-  }
+  # triggers = {
+  #   always_run = timestamp()
+  # }
   provisioner "local-exec" {
     interpreter = ["bash", "-c"]
     command = "ansible-playbook main.yml"
   }
+}
+resource "azurerm_resource_group" "prj-forome" {
+  name     = "prj-forome"
+  location = "eastus"
 }
