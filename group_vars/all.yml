@@ -32,3 +32,4 @@ datasets:
   - NA12878_wgs_hlpanel.tar.gz
   - pgp3140_wgs_nist1696.tar.gz
   - pgp3140_wgs_rtg1997.tar.gz
+  - pgp3140_wgs_nist-v3.3.2.tar.gz
