@@ -8,6 +8,16 @@
     group: "{{ user }}"
     mode: 0775
 
+- name: "Create astorage service"
+  become: true
+  template:
+      src: astorage.service.j2
+      dest: "/etc/systemd/system/astorage.service"
+      owner: "{{ user }}"
+      group: "{{ user }}"
+      mode: 0644
+  notify: "Enable astorage service"
+
 - name: "Create uwsgi.ini"
   template:
       src: uwsgi.ini.j2
@@ -19,20 +29,4 @@
       src: astorage.cfg.j2
       dest: "{{ astorage_dir }}/astorage.cfg"
       mode: 0644
-
-- name: "Create astorage service"
-  become: true
-  template:
-      src: astorage.service.j2
-      dest: "/etc/systemd/system/astorage.service"
-      owner: "{{ user }}"
-      group: "{{ user }}"
-      mode: 0644
-
-- name: "Enable astorage service"
-  become: true
-  systemd:
-    name: astorage
-    daemon_reload: yes
-    enabled: yes
-    state: started
+  notify: "Restart astorage service"

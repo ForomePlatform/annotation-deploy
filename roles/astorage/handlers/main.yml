@@ -1,0 +1,14 @@
+---
+- name: "Enable astorage service"
+  become: true
+  systemd:
+    name: astorage
+    daemon_reload: yes
+    enabled: yes
+    state: started
+
+- name: "Restart astorage service"
+  become: true
+  service:
+    name: astorage
+    state: restarted
