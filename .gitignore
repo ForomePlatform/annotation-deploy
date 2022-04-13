@@ -1,7 +1,7 @@
 # Local .terraform directories
 **/.terraform/*
 # .tfstate files
-#*.tfstate
+*.tfstate
 *.tfstate.*
 *.terraform.lock.hcl
 # Crash log files
@@ -19,5 +19,6 @@ crash.log
 **/*.key
 **/*key.json
 *.env
+env.sh
 # Ansible
 inventory
