@@ -19,6 +19,6 @@ crash.log
 **/*.key
 **/*key.json
 *.env
-env.sh
 # Ansible
 inventory
+*.ini
