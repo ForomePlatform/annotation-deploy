@@ -109,6 +109,4 @@
 - name: "Restore databases"
   become: true
   shell: "gunzip < {{ download_dir }}/mysqldump.sql.gz | mysql"
-  # shell: "mysql < {{ download_dir }}/{{ mysqldump }}"
-  # when: mysqldump_unarchive.changed
   when: mysqldump_download.changed

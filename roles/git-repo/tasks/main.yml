@@ -1,0 +1,19 @@
+---
+- name: "Git clone {{ annotation_git_repo }}"
+  ansible.builtin.git:
+    repo: "{{ annotation_git_repo }}"
+    dest: "{{ astorage_dir }}/Anfisa-Annotations"
+    version: "{{ annotation_git_branch }}"
+    force: yes
+
+- name: Find sh files
+  find:
+    paths: "{{ astorage_dir }}/Anfisa-Annotations/pipeline/projects/ensembl-vep/"
+    patterns: "*.sh"
+  register: sh_files
+
+- name: Make sh files executable
+  file:
+    path: "{{ item.path }}"
+    mode: a+x
+  loop: "{{ sh_files.files }}"

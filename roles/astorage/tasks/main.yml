@@ -18,15 +18,17 @@
       mode: 0644
   notify: "Enable astorage service"
 
-- name: "Create uwsgi.ini"
-  template:
-      src: uwsgi.ini.j2
-      dest: "{{ astorage_dir }}/uwsgi.ini"
-      mode: 0644
-
-- name: "Create astorage.cfg"
-  template:
-      src: astorage.cfg.j2
-      dest: "{{ astorage_dir }}/astorage.cfg"
-      mode: 0644
-  notify: "Restart astorage service"
+- block:
+    - name: "Create uwsgi.ini"
+      template:
+          src: uwsgi.ini.j2
+          dest: "{{ astorage_dir }}/uwsgi.ini"
+          mode: 0644
+    - name: "Create astorage.cfg"
+      template:
+          src: astorage.cfg.j2
+          dest: "{{ astorage_dir }}/astorage.cfg"
+          mode: 0644
+  notify:
+    - "Restart astorage service"
+    - "Restart nginx service"

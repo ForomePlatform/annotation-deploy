@@ -3,16 +3,17 @@ locals {
   ssh_public_key_file = pathexpand("${var.ssh_public_key_file}")
   ssh_private_key_file = pathexpand("${var.ssh_private_key_file}")
 }
-module "cos" {
-  source = "./modules/cos"
-  basename = var.basename
-  region = var.region
-  resource_group = "asset-forome"
-  resource_instance = "asset-forome"
-}
+# module "cos" {
+#   source = "./modules/cos"
+#   basename = var.basename
+#   region = var.region
+#   resource_group = "asset-forome"
+#   resource_instance = "asset-forome"
+# }
 module "ssh" {
   source = "./modules/ssh"
   basename = var.basename
+  instance_name = var.instance_name
   region = var.region
   resource_group = var.resource_group
   ssh_public_key = local.ssh_public_key
@@ -57,6 +58,7 @@ resource "local_file" "ansible_inventory" {
     }
   )
   filename = "inventory"
+  # filename = "${var.instance_name}.ini"
 }
 # resource "null_resource" "ansible_playbook" {
 #   depends_on = [
@@ -72,9 +74,14 @@ resource "local_file" "ansible_inventory" {
 #   provisioner "local-exec" {
 #     interpreter = ["bash", "-c"]
 #     command = "ansible-playbook main.yml"
+#     # command = "ansible-playbook main.yml --inventory=${local_file.ansible_inventory.filename}.ini"
 #   }
 # }
-resource "azurerm_resource_group" "prj-forome" {
-  name     = "prj-forome"
-  location = "eastus"
+terraform {
+  backend "azurerm" {
+    resource_group_name  = "prj-forome"
+    storage_account_name = "forome"
+    container_name       = "tfstate"
+    key                  = "annotation/terraform.tfstate"
+  }
 }

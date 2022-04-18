@@ -36,6 +36,7 @@ resource "ibm_is_instance" "vsi" {
   zone           = var.zone
   profile        = var.instance_profile
   keys           = [var.ssh_key_id]
+  # keys           = "r006-73991cdb-0ea3-4a3a-8dbb-9a2b89e5204c"
   image          = data.ibm_is_image.ubuntu.id
   user_data      = data.template_file.user_data.rendered
   lifecycle {

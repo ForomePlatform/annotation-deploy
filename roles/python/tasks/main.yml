@@ -8,13 +8,6 @@
     owner: "{{ user }}"
     group: "{{ user }}"
 
-- name: "Git clone {{ annotation_git_repo }}"
-  ansible.builtin.git:
-    repo: "{{ annotation_git_repo }}"
-    dest: "{{ astorage_dir }}/Anfisa-Annotations"
-    version: "{{ annotation_git_branch }}"
-    force: yes
-
 - name: "Install virtualenv"
   become: true
   pip:

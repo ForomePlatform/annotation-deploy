@@ -16,14 +16,13 @@
       setup:
 
   roles:
-    # - user
-    # - apt
-    # - docker
-    # - awscli
-    # - mysql
-    # - copy-data
-    # - copy-dataset
-    # - nginx
-    # - python
-    # - astorage
-    # - annotation
+    - user
+    - apt
+    - docker
+    - mysql
+    - copy-data
+    - copy-dataset
+    - nginx
+    - python
+    - astorage
+    - annotation

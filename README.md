@@ -9,6 +9,11 @@ Store the API key as the environment variable `IC_API_KEY`:
 export IC_API_KEY=$(grep '"apikey":' terraform_key.json | sed 's/.*: "\(.*\)".*/\1/')
 ```
 
+Set Azure API key as `ARM_ACCESS_KEY`:
+```bash
+export ARM_ACCESS_KEY=<ARM_ACCESS_KEY>
+```
+
 Set aws s3 credentials:
 ```bash
 export AWS_ACCESS_KEY_ID=<AWS_ACCESS_KEY_ID>
@@ -40,20 +45,20 @@ source .env
 
 Copy `terraform.tfvars.example` to `terraform.tfvars` and reassign variables if necessary.
 
-Deploy with terraform (ansible playbook will be run automatically):
+Deploy with terraform:
 ```
 terraform init
 terraform plan
 terraform apply -auto-approve
 ```
 
-Manually configure with ansible:
-```
-ansible-playbook main.yml
+C onfigure with ansible:
+```bash
+ansible-playbook main.yml --inventory=<instance_name>
 ```
 
 To destroy deployment:
-```
+```bash
 terraform apply -destroy -auto-approve
 ```
 
