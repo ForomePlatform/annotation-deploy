@@ -16,6 +16,7 @@ module "ssh" {
   instance_name = var.instance_name
   region = var.region
   resource_group = var.resource_group
+  ssh_key_name = var.ssh_key_name
   ssh_public_key = local.ssh_public_key
 }
 module "vsi" {
@@ -57,8 +58,8 @@ resource "local_file" "ansible_inventory" {
       ssh_private_key_file = local.ssh_private_key_file
     }
   )
-  filename = "inventory"
-  # filename = "${var.instance_name}.ini"
+  # filename = "inventory"
+  filename = "${var.basename}.ini"
 }
 # resource "null_resource" "ansible_playbook" {
 #   depends_on = [
@@ -73,8 +74,8 @@ resource "local_file" "ansible_inventory" {
 #   # }
 #   provisioner "local-exec" {
 #     interpreter = ["bash", "-c"]
-#     command = "ansible-playbook main.yml"
-#     # command = "ansible-playbook main.yml --inventory=${local_file.ansible_inventory.filename}.ini"
+#     # command = "ansible-playbook main.yml"
+#     command = "ansible-playbook main.yml --inventory=${local_file.ansible_inventory.filename}.ini"
 #   }
 # }
 terraform {
@@ -82,6 +83,6 @@ terraform {
     resource_group_name  = "prj-forome"
     storage_account_name = "forome"
     container_name       = "tfstate"
-    key                  = "annotation/terraform.tfstate"
+    key                  = "terraform.tfstate"
   }
 }

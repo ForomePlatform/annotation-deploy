@@ -52,9 +52,12 @@ variable "data_volume_profile" {
 variable "data_volume_capacity" {
   default = "1000"
 }
+variable "ssh_key_name" {
+  default = "forome-ssh"
+}
 variable "ssh_public_key_file" {
-  default = "~/.ssh/id_rsa.pub"
+  default = ".ssh/id_rsa.pub"
 }
 variable "ssh_private_key_file" {
-  default = "~/.ssh/id_rsa"
+  default = ".ssh/id_rsa"
 }
