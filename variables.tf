@@ -1,4 +1,8 @@
-variable "ibmcloud_api_key" {}
+variable "ibmcloud_api_key" {
+  description = "ibmcloud_api_key"
+  type = string
+  nullable = false
+}
 variable "region" {
   description = "us-south"
   default = "us-south"
