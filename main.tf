@@ -2,6 +2,7 @@ locals {
   ssh_public_key = file(pathexpand("${var.ssh_public_key_file}"))
   ssh_public_key_file = pathexpand("${var.ssh_public_key_file}")
   ssh_private_key_file = pathexpand("${var.ssh_private_key_file}")
+  basename = "${terraform.workspace}"
 }
 # module "cos" {
 #   source = "./modules/cos"
@@ -12,7 +13,8 @@ locals {
 # }
 module "ssh" {
   source = "./modules/ssh"
-  basename = var.basename
+  # basename = var.basename
+  basename = local.basename
   instance_name = var.instance_name
   region = var.region
   resource_group = var.resource_group
@@ -21,7 +23,8 @@ module "ssh" {
 }
 module "vsi" {
   source = "./modules/vsi"
-  basename = var.basename
+  # basename = var.basename
+  basename = local.basename
   region = var.region
   zone = var.zone
   vpc = var.vpc
@@ -50,7 +53,8 @@ resource "local_file" "ansible_inventory" {
   ]
   content = templatefile("inventory.tpl",
     {
-      basename = var.basename
+      # basename = var.basename
+      basename = local.basename
       instance_name = module.vsi.instance_name
       instance_ext_ip = module.vsi.instance_ext_ip
       user_name = var.user_name
@@ -59,7 +63,7 @@ resource "local_file" "ansible_inventory" {
     }
   )
   # filename = "inventory"
-  filename = "${var.basename}.ini"
+  filename = "${local.basename}.ini"
 }
 # resource "null_resource" "ansible_playbook" {
 #   depends_on = [

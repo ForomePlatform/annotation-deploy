@@ -1,6 +1,3 @@
-variable "basename" {
-  default = "terraform"
-}
 variable "region" {
   description = "us-south"
   default = "us-south"
@@ -56,8 +53,8 @@ variable "ssh_key_name" {
   default = "forome-ssh"
 }
 variable "ssh_public_key_file" {
-  default = ".ssh/id_rsa.pub"
+  default = ".ssh/forome-ssh.pub"
 }
 variable "ssh_private_key_file" {
-  default = ".ssh/id_rsa"
+  default = ".ssh/forome-ssh"
 }

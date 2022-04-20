@@ -16,14 +16,14 @@ resource "ibm_is_floating_ip" "fip" {
   target         = ibm_is_instance.vsi.primary_network_interface[0].id
 }
 resource "ibm_is_volume" "var" {
-  name           = "${var.basename}-${var.instance_name}-var-${var.var_volume_capacity}gb"
+  name           = "${var.basename}-${var.instance_name}-var"
   resource_group = var.resource_group
   zone           = var.zone
   profile        = var.var_volume_profile
   capacity       = var.var_volume_capacity
 }
 resource "ibm_is_volume" "data" {
-  name           = "${var.basename}-${var.instance_name}-data-${var.data_volume_capacity}gb"
+  name           = "${var.basename}-${var.instance_name}-data"
   resource_group = var.resource_group
   zone           = var.zone
   profile        = var.data_volume_profile
@@ -36,7 +36,6 @@ resource "ibm_is_instance" "vsi" {
   zone           = var.zone
   profile        = var.instance_profile
   keys           = [var.ssh_key_id]
-  # keys           = "r006-73991cdb-0ea3-4a3a-8dbb-9a2b89e5204c"
   image          = data.ibm_is_image.ubuntu.id
   user_data      = data.template_file.user_data.rendered
   lifecycle {
