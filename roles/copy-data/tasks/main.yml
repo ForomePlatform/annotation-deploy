@@ -9,16 +9,27 @@
     owner: "{{ user }}"
     group: "{{ user }}"
 
-- name: "aws s3 sync {{ bucket_annotation }} to {{ data_dir }}"
-  shell: "aws --endpoint-url {{ endpoint_url }} s3 sync s3://{{ bucket_annotation }}{{ data_dir }} {{ data_dir }}"
-  async: 10000
-  poll: 0
-  register: result
+- name: "Create s3sync.sh"
+  template:
+    src: s3sync.sh.j2
+    dest: "{{ data_dir }}/s3sync.sh"
+    mode: 0775
 
-- name: "Syncing data ..."
-  async_status:
-    jid: "{{ result.ansible_job_id }}"
-  register: job_result
-  until: job_result.finished
-  retries: 10000
-  delay: 60
+- name: "Run s3sync.sh in background"
+  shell: "{{ data_dir }}/s3sync.sh"
+  async: 10
+  poll: 0
+
+# - name: "aws s3 sync {{ bucket_annotation }} to {{ data_dir }}"
+#   shell: "aws --endpoint-url {{ endpoint_url }} s3 sync s3://{{ bucket_annotation }}{{ data_dir }} {{ data_dir }}"
+#   async: 10000
+#   poll: 0
+#   register: result
+
+# - name: "Syncing data ..."
+#   async_status:
+#     jid: "{{ result.ansible_job_id }}"
+#   register: job_result
+#   until: job_result.finished
+#   retries: 10000
+#   delay: 60
