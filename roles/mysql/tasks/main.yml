@@ -110,3 +110,5 @@
   become: true
   shell: "gunzip < {{ download_dir }}/mysqldump.sql.gz | mysql"
   when: mysqldump_download.changed
+  async: 10
+  poll: 0
