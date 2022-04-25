@@ -1,114 +1,100 @@
 ---
-- name: "Install dependencies"
-  become: true
-  apt:
-    name: "{{ item }}"
-    update_cache: yes
-    state: present
-  loop:
-    - python3
-    - python3-pip
+# - name: "Installing Mysql and dependencies"
+#   become: true
+#   package:
+#     name: "{{ item }}"
+#     state: present
+#     update_cache: yes
+#   loop:
+#     - mysql-server
+#     - mysql-client 
+#     - python3-mysqldb
+#     - libmysqlclient-dev
+#   register: mysql_install
 
-- name: "Install boto3 and botocore modules"
-  pip:
-    name: "{{ item }}"
-    state: present
-  loop:
-    - boto3
-    - botocore
+# - name: "Stop mysql service"
+#   become: true
+#   service:
+#     name: mysql
+#     state: stopped
+#   register: mysql_stopped
+#   when: mysql_install.changed
 
-- name: "Installing Mysql and dependencies"
-  become: true
-  package:
-    name: "{{ item }}"
-    state: present
-    update_cache: yes
-  loop:
-    - mysql-server
-    - mysql-client 
-    - python3-mysqldb
-    - libmysqlclient-dev
-  register: mysql_install
+# - name: "Copy /var/lib/mysql to /mnt/var/mysql"
+#   become: true
+#   shell: rsync -av /var/lib/mysql /mnt/var/
+#   register: mysql_var
+#   when: mysql_stopped.changed
 
-- name: "Stop mysql service"
-  become: true
-  service:
-    name: mysql
-    state: stopped
-  register: mysql_stopped
-  when: mysql_install.changed
+# - name: "Edit mysql config"
+#   become: true
+#   lineinfile:
+#     dest: /etc/mysql/mysql.conf.d/mysqld.cnf
+#     regexp: "^# datadir"
+#     line: "datadir = /mnt/var/mysql"
+#     state: present
+#   register: mysql_config
+#   when: mysql_var.changed
 
-- name: "Copy /var/lib/mysql to /mnt/var/mysql"
-  become: true
-  shell: rsync -av /var/lib/mysql /mnt/var/
-  register: mysql_var
-  when: mysql_stopped.changed
+# - name: "Edit apparmor config"
+#   become: true
+#   replace:
+#     path: /etc/apparmor.d/usr.sbin.mysqld
+#     regexp: '^\s+/var/lib/mysql/(.*)$'
+#     replace: '  /mnt/var/mysql/\1'
+#     backup: yes
+#   register: apparmor
+#   when: mysql_config.changed
 
-- name: "Edit mysql config"
-  become: true
-  lineinfile:
-    dest: /etc/mysql/mysql.conf.d/mysqld.cnf
-    regexp: "^# datadir"
-    line: "datadir = /mnt/var/mysql"
-    state: present
-  register: mysql_config
-  when: mysql_var.changed
+# - name: "Restart apparmor"
+#   become: true
+#   service:
+#     name: apparmor
+#     state: restarted
+#   when: apparmor.changed
 
-- name: "Edit apparmor config"
-  become: true
-  replace:
-    path: /etc/apparmor.d/usr.sbin.mysqld
-    regexp: '^\s+/var/lib/mysql/(.*)$'
-    replace: '  /mnt/var/mysql/\1'
-    backup: yes
-  register: apparmor
-  when: mysql_config.changed
+# - name: "Restart mysql"
+#   become: true
+#   service:
+#     name: mysql
+#     state: restarted
+#   when: mysql_config.changed
 
-- name: "Restart apparmor"
-  become: true
-  service:
-    name: apparmor
-    state: restarted
-  when: apparmor.changed
+# - name: "Creating mysql user {{ mysql_user }}"
+#   become: true
+#   mysql_user:
+#     name: "{{ mysql_user }}"
+#     password: "{{ mysql_password }}"
+#     priv: '*.*:ALL'
+#     host: 'localhost'
+#     state: present
 
-- name: "Restart mysql"
-  become: true
-  service:
-    name: mysql
-    state: restarted
-  when: mysql_config.changed
+# - name: "Download mysqldump.sql.gz"
+#   amazon.aws.aws_s3:
+#     bucket: "{{bucket_annotation}}"
+#     object: "mysqldump.sql.gz"
+#     dest: "{{ download_dir }}/mysqldump.sql.gz"
+#     mode: get
+#     overwrite: different
+#     s3_url: "{{ endpoint_url }}"
+#   register: download_mysqldump
 
-- name: "Creating mysql user {{ mysql_user }}"
-  become: true
-  mysql_user:
-    name: "{{ mysql_user }}"
-    password: "{{ mysql_password }}"
-    priv: '*.*:ALL'
-    host: 'localhost'
-    state: present
-
-- name: "Prepare directory {{ download_dir }}"
-  become: true
-  file:
-    path: "{{ download_dir }}"
-    state: directory
+- name: "Create mysqlrestore.sh"
+  template:
+    src: mysqlrestore.sh.j2
+    dest: "{{ data_dir }}/mysqlrestore.sh"
     mode: 0775
-    owner: "{{ user }}"
-    group: "{{ user }}"
 
-- name: "Download mysqldump.sql.gz"
-  amazon.aws.aws_s3:
-    bucket: "{{bucket_annotation}}"
-    object: "mysqldump.sql.gz"
-    dest: "{{ download_dir }}/mysqldump.sql.gz"
-    mode: get
-    overwrite: different
-    s3_url: "{{ endpoint_url }}"
-  register: mysqldump_download
-
-- name: "Restore databases"
+- name: "Run mysqlrestore.sh in background"
   become: true
-  shell: "gunzip < {{ download_dir }}/mysqldump.sql.gz | mysql"
-  when: mysqldump_download.changed
+  shell: nohup "{{ data_dir }}/mysqlrestore.sh" &
   async: 10
   poll: 0
+
+# - name: "Restore mysqldump"
+#   become: true
+#   community.mysql.mysql_db:
+#     name: all
+#     state: import
+#     target: "{{ download_dir }}/mysqldump.sql.gz"
+#   when: download_mysqldump.changed

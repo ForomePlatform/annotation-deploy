@@ -5,11 +5,11 @@
     name: nginx
     update_cache: yes
     state: latest
-  notify: start nginx
+  notify: "Start nginx"
 
 - name: "Generate nginx config"
   become: true
   template:
     src: uwsgi.conf.j2
     dest: /etc/nginx/conf.d/uwsgi.conf
-  notify: restart nginx
+  notify: "Restart nginx"

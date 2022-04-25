@@ -1,12 +1,12 @@
 ---
-- name: "Prepare directory {{ py_venv }}"
-  become: true
-  file:
-    path: "{{ py_venv }}"
-    state: directory
-    mode: 0775
-    owner: "{{ user }}"
-    group: "{{ user }}"
+# - name: "Prepare directory {{ py_venv }}"
+#   become: true
+#   file:
+#     path: "{{ py_venv }}"
+#     state: directory
+#     mode: 0775
+#     owner: "{{ user }}"
+#     group: "{{ user }}"
 
 - name: "Install virtualenv"
   become: true
@@ -38,19 +38,20 @@
     requirements: "{{ py_requirements }}"
     virtualenv: "{{ py_venv }}"
 
-- name: "Download forome_tools"
-  get_url:
-    url: "{{ forome_tools_url }}"
-    dest: "/tmp/{{ forome_tools_whl }}.gz"
-  register: forome_tools_download
+# - name: "Download forome_tools"
+#   get_url:
+#     url: "{{ forome_tools_url }}"
+#     dest: "/tmp/{{ forome_tools_whl }}.gz"
+#   register: forome_tools_download
 
-- name: "Unarchive forome_tools"
-  shell: "[[ -e /tmp/{{ forome_tools_whl }} ]] || rm -f /tmp/{{ forome_tools_whl }} && gunzip /tmp/{{ forome_tools_whl }}.gz"
-  register: forome_tools_unarchive
-  when: forome_tools_download.changed
+# - name: "Unarchive forome_tools"
+#   shell: "[[ -e /tmp/{{ forome_tools_whl }} ]] || rm -f /tmp/{{ forome_tools_whl }} && gunzip /tmp/{{ forome_tools_whl }}.gz"
+#   register: forome_tools_unarchive
+#   when: forome_tools_download.changed
 
 - name: "Install forome_tools"
   pip:
-    name: "/tmp/{{ forome_tools_whl }}"
+    # name: "/tmp/{{ forome_tools_whl }}"
+    name: git+https://github.com/ForomePlatform/forome_misc_tools.git#egg=forome-tools
     virtualenv: "{{ py_venv }}"
-  when: forome_tools_unarchive.changed
+  # when: forome_tools_unarchive.changed

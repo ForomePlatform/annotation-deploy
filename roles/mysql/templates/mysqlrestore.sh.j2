@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+if [[ $(ps -ef | fgrep 'mysqlrestore' | grep -v grep) ]]; then
+        echo "Another instance of script already exist! Exiting"
+        exit
+else
+        gunzip < {{ download_dir }}/mysqldump.sql.gz | mysql 2>&1 >{{ data_dir }}/mysqlrestore.log
+fi

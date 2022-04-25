@@ -1,12 +1,12 @@
 ---
-- name: "Prepare directory {{ astorage_dir }}/logs"
-  become: true
-  file:
-    path: "{{ astorage_dir }}/logs"
-    state: directory
-    owner: "{{ user }}"
-    group: "{{ user }}"
-    mode: 0775
+# - name: "Prepare directory {{ astorage_dir }}/logs"
+#   become: true
+#   file:
+#     path: "{{ astorage_dir }}/logs"
+#     state: directory
+#     owner: "{{ user }}"
+#     group: "{{ user }}"
+#     mode: 0775
 
 - name: "Create astorage service"
   become: true

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-if [[ $(ps -ef | grep 's3 sync' | grep -v grep) ]]; then
+if [[ $(ps -ef | fgrep 's3 sync' | grep -v grep) ]]; then
         echo "Another instance of script already exist! Exiting"
         exit
 else

@@ -35,6 +35,14 @@
     - docker-ce-cli
     - containerd.io
 
+- name: "Install Docker-compose"
+  become: true
+  get_url:
+    url : https://github.com/docker/compose/releases/download/1.29.2/docker-compose-{{ ansible_system }}-{{ ansible_architecture }}
+    # url : https://github.com/docker/compose/releases/download/1.29.2/docker-compose-Linux-x86_64
+    dest: /usr/local/bin/docker-compose
+    mode: 'u+x,g+x'
+
 - name: Check if {{ user }} in docker group
   shell: groups | grep docker
   register: docker_group
@@ -47,14 +55,6 @@
     append: yes
     groups: docker
     state: present
-
-- name: "Install Docker-compose"
-  become: true
-  get_url:
-    url : https://github.com/docker/compose/releases/download/1.29.2/docker-compose-{{ ansible_system }}-{{ ansible_architecture }}
-    # url : https://github.com/docker/compose/releases/download/1.29.2/docker-compose-Linux-x86_64
-    dest: /usr/local/bin/docker-compose
-    mode: 'u+x,g+x'
 
 - name: "Reboot due docker group"
   become: true

@@ -1,0 +1,17 @@
+---
+- name: "Prepare directories"
+  become: true
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0775
+    owner: "{{ user }}"
+    group: "{{ user }}"
+  loop:
+    - "{{ data_dir }}"
+    - "{{ annotation_dir }}"
+    - "{{ astorage_dir }}"
+    - "{{ astorage_dir }}/logs"
+    - "{{ cases_dir }}"
+    - "{{ download_dir }}"
+    - "{{ py_venv }}"

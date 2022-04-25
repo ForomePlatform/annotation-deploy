@@ -24,13 +24,18 @@ uwsgi_host: "localhost"
 uwsgi_port: 8290
 nginx_host: "localhost"
 nginx_port: 80
-forome_tools_whl: "forome_tools-0.1.8-py3-none-any.whl"
-forome_tools_url: "https://github.com/ForomePlatform/forome_misc_tools/releases/download/v0.1.8/forome_tools-0.1.8-py3-none-any.whl.gz"
+# forome_tools_whl: "forome_tools-0.1.8-py3-none-any.whl"
+# forome_tools_url: "https://github.com/ForomePlatform/forome_misc_tools/releases/download/v0.1.8/forome_tools-0.1.8-py3-none-any.whl.gz"
 annotation_git_repo: "https://github.com/ForomePlatform/Anfisa-Annotations.git"
 annotation_git_branch: "master"
+forome_tools_git_repo: "https://github.com/ForomePlatform/forome_misc_tools"
+data:
+  - schema.tar.gz
+  - rdbs.tar.gz
+  - database.tar.gz
 datasets:
   - NA12878_wgs_hlpanel.tar.gz
   - pgp3140_wgs_hlpanel.tar.gz
-  # - pgp3140_wgs_nist1696.tar.gz
-  # - pgp3140_wgs_rtg1997.tar.gz
+  - pgp3140_wgs_nist1696.tar.gz
+  - pgp3140_wgs_rtg1997.tar.gz
   - pgp3140_wgs_nist-v3.3.2.tar.gz

@@ -1,13 +1,23 @@
 ---
-- name: "Prepare directory {{ data_dir }}"
-  become: true
-  file:
-    path: "{{ data_dir }}"
-    state: directory
-    mode: 0775
-    recurse: yes
-    owner: "{{ user }}"
-    group: "{{ user }}"
+# - name: "Download data archives"
+#   amazon.aws.aws_s3:
+#     bucket: "{{ bucket_annotation }}"
+#     s3_url: "{{ endpoint_url }}"
+#     object: "{{ item }}"
+#     dest: "{{ download_dir }}/{{ item }}"
+#     mode: get
+#     overwrite: different
+#   loop: "{{ data }}"
+#   # notify: "Extract data archives"
+#   register: download_data
+
+# - name: "Extract data archives"
+#   ansible.builtin.unarchive:
+#     src: "{{ download_dir }}/{{ item }}"
+#     dest: "/"
+#     remote_src: yes
+#   loop: "{{ data }}"
+#   when: download_data.changed
 
 - name: "Create s3sync.sh"
   template:
@@ -16,7 +26,7 @@
     mode: 0775
 
 - name: "Run s3sync.sh in background"
-  shell: "{{ data_dir }}/s3sync.sh"
+  shell: nohup "{{ data_dir }}/s3sync.sh" &
   async: 10
   poll: 0
 
