@@ -1,13 +1,4 @@
 ---
-# - name: "Prepare directory {{ py_venv }}"
-#   become: true
-#   file:
-#     path: "{{ py_venv }}"
-#     state: directory
-#     mode: 0775
-#     owner: "{{ user }}"
-#     group: "{{ user }}"
-
 - name: "Install virtualenv"
   become: true
   pip:

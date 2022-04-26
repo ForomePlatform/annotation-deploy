@@ -4,18 +4,9 @@ locals {
   ssh_private_key_file = pathexpand("${var.ssh_private_key_file}")
   basename = "${terraform.workspace}"
 }
-# module "cos" {
-#   source = "./modules/cos"
-#   ibmcloud_api_key = var.ibmcloud_api_key
-#   basename = var.basename
-#   region = var.region
-#   resource_group = "asset-forome"
-#   resource_instance = "asset-forome"
-# }
 module "ssh" {
   source = "./modules/ssh"
   ibmcloud_api_key = var.ibmcloud_api_key
-  # basename = var.basename
   basename = local.basename
   instance_name = var.instance_name
   region = var.region
@@ -26,7 +17,6 @@ module "ssh" {
 module "vsi" {
   source = "./modules/vsi"
   ibmcloud_api_key = var.ibmcloud_api_key
-  # basename = var.basename
   basename = local.basename
   region = var.region
   zone = var.zone
@@ -56,7 +46,6 @@ resource "local_file" "ansible_inventory" {
   ]
   content = templatefile("inventory.tpl",
     {
-      # basename = var.basename
       basename = local.basename
       instance_name = module.vsi.instance_name
       instance_ext_ip = module.vsi.instance_ext_ip
@@ -65,7 +54,6 @@ resource "local_file" "ansible_inventory" {
       ssh_private_key_file = local.ssh_private_key_file
     }
   )
-  # filename = "inventory"
   filename = "${local.basename}.ini"
 }
 # resource "null_resource" "ansible_playbook" {
@@ -81,7 +69,6 @@ resource "local_file" "ansible_inventory" {
 #   # }
 #   provisioner "local-exec" {
 #     interpreter = ["bash", "-c"]
-#     # command = "ansible-playbook main.yml"
 #     command = "ansible-playbook main.yml --inventory=${local_file.ansible_inventory.filename}.ini"
 #   }
 # }

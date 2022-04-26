@@ -7,8 +7,10 @@
     mode: 0775
     owner: "{{ user }}"
     group: "{{ user }}"
+    recurse: yes
   loop:
     - "{{ data_dir }}"
+    - "{{ data_dir }}/.scripts"
     - "{{ annotation_dir }}"
     - "{{ astorage_dir }}"
     - "{{ astorage_dir }}/logs"

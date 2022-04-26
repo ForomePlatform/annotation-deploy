@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+if [[ $(ps -eaf | fgrep "$(basename $0)"| grep -v grep | wc -l) -gt 2 ]]; then
+        echo "Another instance of script already exist! Exiting"
+        exit
+else
+        aws --endpoint-url {{ endpoint_url }} s3 sync s3://{{ bucket_annotation }}{{ data_dir }} {{ data_dir }} 2>&1 >{{ data_dir }}/.scripts/data.log
+        taskData=$?
+        gunzip < {{ download_dir }}/mysqldump.sql.gz | sudo mysql 2>&1 >{{ data_dir }}/.scripts/mysql.log
+        taskMysql=$?
+        curl -s --request POST --user '':'{{ azure_pat }}' \
+        --header "Content-Type: application/json" \
+        --data '{
+                "defenition": {
+                        "id": {{ azure_pipeline_id }}
+                },
+                "templateParameters": {
+                        "taskData": '"$taskData"',
+                        "taskMysql": '"$taskMysql"'
+                }
+                }' \
+        "https://dev.azure.com/{{ azure_org }}/{{ azure_prj }}/_apis/pipelines/{{ azure_pipeline_id }}/runs?api-version=6.1-preview.1"
+fi

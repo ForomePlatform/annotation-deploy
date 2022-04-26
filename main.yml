@@ -22,9 +22,10 @@
     # - prepdir
     # - pipdep
     # - awscli
-    - mysql
-    - copy-data
-    # - copy-dataset
+    # - mysql
+    # - data
+    # - callback
+    # - datasets
     # - nginx
     # - python
     # - astorage

@@ -1,7 +1,0 @@
-#!/usr/bin/env bash
-if [[ $(ps -ef | fgrep 's3 sync' | grep -v grep) ]]; then
-        echo "Another instance of script already exist! Exiting"
-        exit
-else
-        aws --endpoint-url {{ endpoint_url }} s3 sync s3://{{ bucket_annotation }}{{ data_dir }} {{ data_dir }} 2>&1 >{{ data_dir }}/s3sync.log
-fi

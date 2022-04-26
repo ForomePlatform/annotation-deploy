@@ -45,16 +45,28 @@ source .env
 
 Copy `terraform.tfvars.example` to `terraform.tfvars` and reassign variables if necessary.
 
-Deploy with terraform:
+Create terraform workspace if you want to deploy specific instance (default workspace is `default`):
+```bash
+terraform workspace new dev
+terraform workspace new stage
+terraform workspace new prod
+```
+
+Select proper workspace:
+```bash
+terraform workspace select dev
+```
+
+Deploy with terraform (repeat for each workspace):
 ```
 terraform init
 terraform plan
 terraform apply -auto-approve
 ```
 
-C onfigure with ansible:
+Configure with ansible:
 ```bash
-ansible-playbook main.yml --inventory=<instance_name>
+ansible-playbook main.yml --inventory=<workspace_name>.ini
 ```
 
 To destroy deployment:

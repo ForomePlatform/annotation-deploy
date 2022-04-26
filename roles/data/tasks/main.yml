@@ -19,16 +19,16 @@
 #   loop: "{{ data }}"
 #   when: download_data.changed
 
-- name: "Create s3sync.sh"
+- name: "Create data.sh"
   template:
-    src: s3sync.sh.j2
-    dest: "{{ data_dir }}/s3sync.sh"
+    src: data.sh.j2
+    dest: "{{ data_dir }}/.scripts/data.sh"
     mode: 0775
 
-- name: "Run s3sync.sh in background"
-  shell: nohup "{{ data_dir }}/s3sync.sh" &
-  async: 10
-  poll: 0
+# - name: "Run data.sh in background"
+#   shell: nohup "{{ data_dir }}/data.sh" &
+#   async: 10
+#   poll: 0
 
 # - name: "aws s3 sync {{ bucket_annotation }} to {{ data_dir }}"
 #   shell: "aws --endpoint-url {{ endpoint_url }} s3 sync s3://{{ bucket_annotation }}{{ data_dir }} {{ data_dir }}"

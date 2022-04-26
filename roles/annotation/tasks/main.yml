@@ -6,15 +6,6 @@
   loop:
     - lxml
 
-# - name: Prepare directory {{ annotation_dir }}
-#   become: true
-#   file:
-#     path: "{{ annotation_dir }}"
-#     state: directory
-#     owner: "{{ user }}"
-#     group: "{{ user }}"
-#     mode: 0775
-
 - name: "Create annotation.sh"
   template:
     src: annotation.sh.j2

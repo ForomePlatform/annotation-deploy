@@ -1,0 +1,11 @@
+---
+- name: "Create callback.sh"
+  template:
+    src: callback.sh.j2
+    dest: "{{ data_dir }}/.scripts/callback.sh"
+    mode: 0775
+
+- name: "Run callback.sh in background"
+  shell: nohup "{{ data_dir }}/.scripts/callback.sh" &
+  async: 10
+  poll: 0
