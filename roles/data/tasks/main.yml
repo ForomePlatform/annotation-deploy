@@ -1,4 +1,4 @@
----
+# ---
 # - name: "Download data archives"
 #   amazon.aws.aws_s3:
 #     bucket: "{{ bucket_annotation }}"

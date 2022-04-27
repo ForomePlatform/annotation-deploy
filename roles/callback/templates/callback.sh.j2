@@ -1,30 +1,33 @@
 #!/usr/bin/env bash
-PROCCESS=$(ps -eaf | fgrep "$(basename $0)"| grep -v grep | wc -l)
-LOG_CALL="{{ data_dir }}/.scripts/callback.log"
+LOG="{{ data_dir }}/.scripts/callback.log"
 LOG_DATA="{{ data_dir }}/.scripts/data.log"
 LOG_MYSQL="{{ data_dir }}/.scripts/mysql.log"
-IGNORE_DB="(^mysql|sys|_schema$|-old$|-recovery$)"
-REF_DB="ensembl ensembl_hg38 forome hgmd_phenbase hgmd_pro hgmd_snp hgmd_views"
-
 function sync_data() {
-        aws --endpoint-url {{ endpoint_url }} s3 sync s3://{{ bucket_annotation }}{{ data_dir }} {{ data_dir }} 2>&1 >> $LOG_DATA
-        echo "$(date '+%B %V %T.%3N:') Data has been synced" >> $LOG_MYSQL
+        aws --endpoint-url {{ endpoint_url }} s3 sync s3://{{ bucket_annotation }}{{ data_dir }} {{ data_dir }} >"${LOG_DATA}" 2>&1
+        if [[ "$?" -eq "0" ]]; then
+                echo "$(date '+%B %V %T.%3N:') Data has been synced." >>"${LOG}"
+        else
+                echo "$(date '+%B %V %T.%3N:') ERROR! Data has not been synced." >>"${LOG}"
+                return 1
+        fi
 }
-
-function list_db() {
-	local show_databases_sql="SHOW DATABASES WHERE \`Database\` NOT REGEXP '$IGNORE_DB'"
-	echo $(sudo mysql -e "$show_databases_sql"|awk -F " " '{if (NR!=1) print $1}')
-}
-
-function restore_db() {
-	if [[ $REF_DB == "$(list_db)" ]]; then
-	        echo "$(date '+%B %V %T.%3N:') Databases already exist" >> $LOG_MYSQL
+function restore_mysql() {
+        local ignore_db="(^mysql|sys|_schema$|-old$|-recovery$)"
+        local ref_db="ensembl ensembl_hg38 forome hgmd_phenbase hgmd_pro hgmd_snp hgmd_views"
+	local show_databases_sql="SHOW DATABASES WHERE \`Database\` NOT REGEXP '$ignore_db'"
+	local list_db=$(echo $(sudo mysql -e "$show_databases_sql"|awk -F " " '{if (NR!=1) print $1}'))
+	if [[ "$ref_db" == "$list_db" ]]; then
+	        echo "$(date '+%B %V %T.%3N:') Databases already exist. Skipping." >>"${LOG}"
 	else
-	        gunzip < {{ download_dir }}/mysqldump.sql.gz | mysql 2>&1 >> $LOG_MYSQL
-	        echo "$(date '+%B %V %T.%3N:') Databases has been restored" >> $LOG_MYSQL
+	        gunzip < {{ download_dir }}/mysqldump.sql.gz | sudo mysql >"${LOG_MYSQL}" 2>&1
+                if [[ "$?" -eq "0" ]]; then
+	                echo "$(date '+%B %V %T.%3N:') Databases has been restored." >>"${LOG}"
+                else
+                        echo "$(date '+%B %V %T.%3N:') ERROR! Databases has not been restored." >>"${LOG}"
+                        return 1
+                fi
 	fi
 }
-
 function trigger_pipeline() {
         curl -s --request POST --user '':'{{ azure_pat }}' \
         --header "Content-Type: application/json" \
@@ -39,19 +42,24 @@ function trigger_pipeline() {
                 }' \
         "https://dev.azure.com/{{ azure_org }}/{{ azure_prj }}/_apis/pipelines/{{ azure_pipeline_id }}/runs?api-version=6.1-preview.1"
 }
-
 function callback() {
-	if [[ $PROCCESS -gt 2 ]]; then
-	        echo "$(date '+%B %V %T.%3N:') Another instance of script already exist! Exiting" >> $LOG_CALL
+        local PROCCESS=$(ps -eaf | grep -F "$(basename $0)"| grep -v grep | wc -l)
+        echo -e "\n$(date '+%B %V %T.%3N:') Callback script started." >>"${LOG}"
+	if [[ "$PROCCESS" -gt "2" ]]; then
+	        echo "$(date '+%B %V %T.%3N:') Another instance of script already exist! Exiting." >>"${LOG}"
 	        exit
 	else
                 sync_data
                 taskData=$?
-		restore_db
+		restore_mysql
                 taskMysql=$?
                 trigger_pipeline
-                echo "$(date '+%B %V %T.%3N:') Callback script succeeded" >> $LOG_CALL
+                if [[ "$?" -eq "0" ]]; then
+                        echo "$(date '+%B %V %T.%3N:') Callback script succeeded." >>"${LOG}"
+                else
+                        echo "$(date '+%B %V %T.%3N:') ERROR! Callback script failed." >>"${LOG}"
+                        return 1
+                fi
 	fi
 }
-
 callback
