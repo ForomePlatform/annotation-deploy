@@ -3,6 +3,7 @@ LOG="{{ data_dir }}/.scripts/callback.log"
 LOG_DATA="{{ data_dir }}/.scripts/data.log"
 LOG_MYSQL="{{ data_dir }}/.scripts/mysql.log"
 function sync_data() {
+        echo "$(date '+%B %V %T.%3N:') Start data syncing." >>"${LOG}"
         aws --endpoint-url {{ endpoint_url }} s3 sync s3://{{ bucket_annotation }}{{ data_dir }} {{ data_dir }} >"${LOG_DATA}" 2>&1
         if [[ "$?" -eq "0" ]]; then
                 echo "$(date '+%B %V %T.%3N:') Data has been synced." >>"${LOG}"
@@ -19,6 +20,7 @@ function restore_mysql() {
 	if [[ "$ref_db" == "$list_db" ]]; then
 	        echo "$(date '+%B %V %T.%3N:') Databases already exist. Skipping." >>"${LOG}"
 	else
+                echo "$(date '+%B %V %T.%3N:') Start databases restoring." >>"${LOG}"
 	        gunzip < {{ download_dir }}/mysqldump.sql.gz | sudo mysql >"${LOG_MYSQL}" 2>&1
                 if [[ "$?" -eq "0" ]]; then
 	                echo "$(date '+%B %V %T.%3N:') Databases has been restored." >>"${LOG}"
