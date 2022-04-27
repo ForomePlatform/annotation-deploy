@@ -37,6 +37,14 @@ export SLACK_WEBHOOK=<SLACK_WEBHOOK>
 export SLACK_CHANNEL=<SLACK_CHANNEL>
 ```
 
+Set variables for Azure DevOps pipelines:
+```bash
+export AZURE_PAT=
+export AZURE_ORG=
+export AZURE_PRJ=
+export AZURE_CALLBACK_PIPELINE_ID=
+```
+
 Or you can set all of environments above in .env file.
 Copy `.env.example` to `.env` and set environments:
 ```shell

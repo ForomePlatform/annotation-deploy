@@ -33,14 +33,14 @@ function trigger_pipeline() {
         --header "Content-Type: application/json" \
         --data '{
                 "defenition": {
-                        "id": {{ azure_pipeline_id }}
+                        "id": {{ azure_callback_pipeline_id }}
                 },
                 "templateParameters": {
                         "taskData": '"$taskData"',
                         "taskMysql": '"$taskMysql"'
                 }
                 }' \
-        "https://dev.azure.com/{{ azure_org }}/{{ azure_prj }}/_apis/pipelines/{{ azure_pipeline_id }}/runs?api-version=6.1-preview.1"
+        "https://dev.azure.com/{{ azure_org }}/{{ azure_prj }}/_apis/pipelines/{{ azure_callback_pipeline_id }}/runs?api-version=6.1-preview.1"
 }
 function callback() {
         local PROCCESS=$(ps -eaf | grep -F "$(basename $0)"| grep -v grep | wc -l)
