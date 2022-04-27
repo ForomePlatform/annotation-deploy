@@ -16,17 +16,17 @@
       setup:
 
   roles:
-    - user
-    - apt
-    - docker
-    - prepdir
-    - pipdep
-    - awscli
-    - mysql
-    - data
+    # - user
+    # - apt
+    # - docker
+    # - prepdir
+    # - pipdep
+    # - awscli
+    # - mysql
+    # - data
     - callback
-    - datasets
-    - nginx
-    - python
-    - astorage
-    - annotation
+    # - datasets
+    # - nginx
+    # - python
+    # - astorage
+    # - annotation

@@ -79,11 +79,11 @@
     s3_url: "{{ endpoint_url }}"
   register: download_mysqldump
 
-- name: "Create mysql.sh"
-  template:
-    src: mysql.sh.j2
-    dest: "{{ data_dir }}/.scripts/mysql.sh"
-    mode: 0775
+# - name: "Create mysql.sh"
+#   template:
+#     src: mysql.sh.j2
+#     dest: "{{ data_dir }}/.scripts/mysql.sh"
+#     mode: 0775
 
 # - name: "Run mysqlrestore.sh in background"
 #   become: true

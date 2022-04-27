@@ -19,11 +19,11 @@
 #   loop: "{{ data }}"
 #   when: download_data.changed
 
-- name: "Create data.sh"
-  template:
-    src: data.sh.j2
-    dest: "{{ data_dir }}/.scripts/data.sh"
-    mode: 0775
+# - name: "Create data.sh"
+#   template:
+#     src: data.sh.j2
+#     dest: "{{ data_dir }}/.scripts/data.sh"
+#     mode: 0775
 
 # - name: "Run data.sh in background"
 #   shell: nohup "{{ data_dir }}/data.sh" &
