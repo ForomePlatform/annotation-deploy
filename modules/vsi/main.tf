@@ -45,8 +45,8 @@ resource "ibm_is_instance" "vsi" {
     name         = "${var.basename}-${var.instance_name}-boot"
   }
   volumes = [
-    ibm_is_volume.var.id,
-    ibm_is_volume.data.id
+    ibm_is_volume.data.id,
+    ibm_is_volume.var.id
     ]
   primary_network_interface {
     name            = "eth0"
