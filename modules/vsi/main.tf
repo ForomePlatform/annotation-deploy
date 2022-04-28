@@ -2,10 +2,10 @@ data "ibm_is_image" "ubuntu" {
   name = "ibm-ubuntu-20-04-3-minimal-amd64-2"
 }
 data "template_file" "user_data" {
-  template = file("${path.module}/scripts/cloud-init.yml")
+  template = file("${path.module}/user_data/cloud-init.yml")
   vars = {
-    var_disk_name = var.var_disk_name
     data_disk_name = var.data_disk_name
+    var_disk_name = var.var_disk_name
     user_name = var.user_name
     ssh_public_key = var.ssh_public_key
   }
@@ -15,19 +15,19 @@ resource "ibm_is_floating_ip" "fip" {
   resource_group = var.resource_group
   target         = ibm_is_instance.vsi.primary_network_interface[0].id
 }
-resource "ibm_is_volume" "var" {
-  name           = "${var.basename}-${var.instance_name}-var"
-  resource_group = var.resource_group
-  zone           = var.zone
-  profile        = var.var_volume_profile
-  capacity       = var.var_volume_capacity
-}
 resource "ibm_is_volume" "data" {
   name           = "${var.basename}-${var.instance_name}-data"
   resource_group = var.resource_group
   zone           = var.zone
   profile        = var.data_volume_profile
   capacity       = var.data_volume_capacity
+}
+resource "ibm_is_volume" "var" {
+  name           = "${var.basename}-${var.instance_name}-var"
+  resource_group = var.resource_group
+  zone           = var.zone
+  profile        = var.var_volume_profile
+  capacity       = var.var_volume_capacity
 }
 resource "ibm_is_instance" "vsi" {
   name           = "${var.basename}-${var.instance_name}"
@@ -45,8 +45,8 @@ resource "ibm_is_instance" "vsi" {
     name         = "${var.basename}-${var.instance_name}-boot"
   }
   volumes = [
-    ibm_is_volume.var.id,
-    ibm_is_volume.data.id
+    ibm_is_volume.data.id,
+    ibm_is_volume.var.id
     ]
   primary_network_interface {
     name            = "eth0"
