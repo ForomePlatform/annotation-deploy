@@ -26,16 +26,16 @@ module "vsi" {
   resource_group = var.resource_group
   instance_name = var.instance_name
   instance_profile = var.instance_profile
-  var_volume_profile = var.var_volume_profile
-  var_volume_capacity = var.var_volume_capacity
+  data_disk_name = var.data_disk_name
   data_volume_profile = var.data_volume_profile
   data_volume_capacity = var.data_volume_capacity
+  var_disk_name = var.var_disk_name
+  var_volume_profile = var.var_volume_profile
+  var_volume_capacity = var.var_volume_capacity
   ssh_key_id = module.ssh.id
   ssh_public_key_file = local.ssh_public_key_file
   ssh_public_key = local.ssh_public_key
   user_name = var.user_name
-  var_disk_name = var.var_disk_name
-  data_disk_name = var.data_disk_name
 }
 resource "local_file" "ansible_inventory" {
   depends_on = [
