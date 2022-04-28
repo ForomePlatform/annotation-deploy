@@ -38,8 +38,10 @@ function trigger_pipeline() {
                         "id": {{ azure_callback_pipeline_id }}
                 },
                 "templateParameters": {
-                        "taskData": '"$taskData"',
-                        "taskMysql": '"$taskMysql"'
+                        "taskSyncData": '"$taskSyncData"',
+                        "taskRestoreMysql": '"$taskRestoreMysql"',
+                        "taskRestartAstorage": '"$taskRestartAstorage"',
+                        "taskRestartNginx": '"$taskRestartNginx"'
                 }
                 }' \
         "https://dev.azure.com/{{ azure_org }}/{{ azure_prj }}/_apis/pipelines/{{ azure_callback_pipeline_id }}/runs?api-version=6.1-preview.1"
@@ -51,10 +53,10 @@ function callback() {
 	        echo "$(date '+%B %V %T.%3N:') Another instance of script already exist! Exiting." >>"${LOG}"
 	        exit
 	else
-                sync_data
-                taskData=$?
-		restore_mysql
-                taskMysql=$?
+                sync_data; taskSyncData=$?
+		restore_mysql; taskRestoreMysql=$?
+                sudo systemctl restart astorage; taskRestartAstorage=$?
+                sudo systemctl restart nginx; taskRestartNginx=$?
                 trigger_pipeline
                 if [[ "$?" -eq "0" ]]; then
                         echo "$(date '+%B %V %T.%3N:') Callback script succeeded." >>"${LOG}"
