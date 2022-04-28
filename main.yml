@@ -24,9 +24,9 @@
     - awscli
     - mysql
     - data
-    - callback
     - datasets
     - nginx
     - python
     - astorage
     - annotation
+    - callback
