@@ -17,10 +17,10 @@ function restore_mysql() {
         local ref_db="ensembl ensembl_hg38 forome hgmd_phenbase hgmd_pro hgmd_snp hgmd_views"
 	local show_databases_sql="SHOW DATABASES WHERE \`Database\` NOT REGEXP '$ignore_db'"
 	local list_db=$(echo $(sudo mysql -e "$show_databases_sql"|awk -F " " '{if (NR!=1) print $1}'))
+        echo "$(date '+%B %V %T.%3N:') Start databases restoring." >>"${LOG}"
 	if [[ "$ref_db" == "$list_db" ]]; then
 	        echo "$(date '+%B %V %T.%3N:') Databases already exist. Skipping." >>"${LOG}"
 	else
-                echo "$(date '+%B %V %T.%3N:') Start databases restoring." >>"${LOG}"
 	        gunzip < {{ download_dir }}/mysqldump.sql.gz | sudo mysql >"${LOG_MYSQL}" 2>&1
                 if [[ "$?" -eq "0" ]]; then
 	                echo "$(date '+%B %V %T.%3N:') Databases has been restored." >>"${LOG}"
