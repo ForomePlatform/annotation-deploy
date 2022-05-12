@@ -1,0 +1,28 @@
+---
+- name: "Prepare directories"
+  become: true
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0775
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    # recurse: yes
+  loop:
+    - "{{ data_dir }}"
+    - "{{ data_dir }}/vep"
+    - "{{ data_dir }}/.scripts"
+    - "{{ annotation_dir }}"
+    - "{{ annotation_dir }}/database"
+    - "{{ annotation_dir }}/database/1.0.0"
+    - "{{ annotation_dir }}/database/1.0.0/annotation-hg37"
+    - "{{ annotation_dir }}/database/1.0.0/annotation-hg38"
+    - "{{ astorage_dir }}"
+    - "{{ astorage_dir }}/logs"
+    - "{{ astorage_dir }}/rdbs"
+    - "{{ astorage_dir }}/schema"
+    - "{{ astorage_dir }}/venv"
+    - "{{ cases_dir }}"
+    - "{{ downloads_dir }}"
+    - "{{ py_venv }}"
+    - "{{ mysql_datadir }}"
