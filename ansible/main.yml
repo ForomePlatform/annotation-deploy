@@ -27,13 +27,13 @@
 
   roles:
     - role: users
-      when: ansible_connection is defined and ansible_connection == 'local'
+      when: ansible_connection is defined and ansible_connection != 'local'
     - role: apt
     - role: docker
     - role: prepdir
     - role: pipdep
     - role: awscli
-      when: ansible_connection is defined and ansible_connection == 'local'
+      when: ansible_connection is defined and ansible_connection != 'local'
     - role: mysql
     - role: data
       when: callback | default(false) | bool == false
