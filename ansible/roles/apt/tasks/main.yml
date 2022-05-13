@@ -56,4 +56,4 @@
   become: true
   reboot:
     reboot_timeout: 600
-  when: reboot_required_file.stat.exists == true and ansible_connection != local
+  when: reboot_required_file.stat.exists == true and ansible_connection != 'local'

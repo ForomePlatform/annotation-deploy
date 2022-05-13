@@ -60,4 +60,4 @@
   become: true
   reboot:
     reboot_timeout: 600
-  when: docker_group.failed == true and ansible_connection != local
+  when: docker_group.failed == true and ansible_connection != 'local'
