@@ -1,0 +1,11 @@
+---
+- name: "Download data archives"
+  amazon.aws.aws_s3:
+    bucket: "{{ bucket_annotation }}"
+    s3_url: "{{ endpoint_url }}"
+    object: "{{ item }}"
+    dest: "{{ downloads_dir }}/{{ item }}"
+    mode: get
+    overwrite: different
+  loop: "{{ data }}"
+  register: download_data

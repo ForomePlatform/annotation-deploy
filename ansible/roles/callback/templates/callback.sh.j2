@@ -4,7 +4,8 @@ LOG_DATA="{{ data_dir }}/.scripts/data.log"
 LOG_MYSQL="{{ data_dir }}/.scripts/mysql.log"
 function sync_data() {
         echo "$(date '+%B %V %T.%3N:') Start data syncing." >>"${LOG}"
-        aws --endpoint-url {{ endpoint_url }} s3 sync s3://{{ bucket_annotation }}{{ data_dir }} {{ data_dir }} >"${LOG_DATA}" 2>&1
+        aws --endpoint-url {{ endpoint_url }} s3 sync s3://{{ bucket_annotation }}{{ annotation_dir }} {{ annotation_dir }} >"${LOG_DATA}" 2>&1 && \
+        aws --endpoint-url {{ endpoint_url }} s3 sync s3://{{ bucket_annotation }}{{ astorage_dir }} {{ astorage_dir }} >>"${LOG_DATA}" 2>&1
         if [[ "$?" -eq "0" ]]; then
                 echo "$(date '+%B %V %T.%3N:') Data has been synced." >>"${LOG}"
         else

@@ -1,14 +1,5 @@
 ---
-- name: "Download data archives"
-  amazon.aws.aws_s3:
-    bucket: "{{ bucket_annotation }}"
-    s3_url: "{{ endpoint_url }}"
-    object: "{{ item }}"
-    dest: "{{ downloads_dir }}/{{ item }}"
-    mode: get
-    overwrite: different
-  loop: "{{ data }}"
-  register: download_data
+- import_tasks: geturl_download.yml
 
 - name: "Extract data archives"
   ansible.builtin.unarchive:
