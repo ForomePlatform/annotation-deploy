@@ -33,17 +33,17 @@ nginx_port: 80
 annotation_git_repo: "https://github.com/ForomePlatform/Anfisa-Annotations.git"
 annotation_git_branch: "master"
 forome_tools_git_repo: "https://github.com/ForomePlatform/forome_misc_tools"
-# mysqldump: "mysqldump.sql.gz"
-mysqldump: "mysqldump_stub.sql.gz"
+mysqldump: "mysqldump.sql.gz"
+# mysqldump: "mysqldump_stub.sql.gz"
 data:
-  # - annotation-hg37_fullpath.tar.gz
-  # - annotation-hg38_fullpath.tar.gz
-  # - schema_fullpath.tar.gz
-  # - rdbs_fullpath.tar.gz
-  - annotation-hg37_fullpath_stub.tar.gz
-  - annotation-hg38_fullpath_stub.tar.gz
-  - schema_fullpath_stub.tar.gz
-  - rdbs_fullpath_stub.tar.gz
+  - annotation-hg37_fullpath.tar.gz
+  - annotation-hg38_fullpath.tar.gz
+  - schema_fullpath.tar.gz
+  - rdbs_fullpath.tar.gz
+  # - annotation-hg37_fullpath_stub.tar.gz
+  # - annotation-hg38_fullpath_stub.tar.gz
+  # - schema_fullpath_stub.tar.gz
+  # - rdbs_fullpath_stub.tar.gz
 datasets:
   - NA12878_wgs_hlpanel.tar.gz
   - pgp3140_wgs_hlpanel.tar.gz

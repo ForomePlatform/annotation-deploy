@@ -1,11 +1,21 @@
 # Deploy annotation service
 ## On local machine
 
-Prerequisites:
-- Linux machine on **Ubuntu 20.04**
+### Prerequisites:
+- Linux machine on **Ubuntu 20.04.4 LTS**
 - Installed [ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#installing-ansible-on-ubuntu)
+  
+  tested at:
+  ```
+  ansible [core 2.12.5]
+  python version = 3.8.10 (default, Mar 15 2022, 12:22:08) [GCC 9.4.0]
+  jinja version = 2.10.1
+  ```
 - About **350 Gb** free disk space at least
 - `sudo` privileges
+
+
+### Deployment
 
 Clone repo:
 ```bash
@@ -30,3 +40,9 @@ ansible-playbook main.yml -i inventory_local
 ```
 
 The process takes several hous. Be patient ...
+
+Ansible playbook should end successfully without errors.
+```bash
+PLAY RECAP *****************************************************************************************************
+localhost                  : ok=X   changed=X    unreachable=0    failed=0    skipped=X   rescued=0    ignored=1
+```
