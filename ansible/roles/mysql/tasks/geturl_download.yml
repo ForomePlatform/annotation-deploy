@@ -1,0 +1,6 @@
+---
+- name: "Download mysqldump"
+  get_url:
+    url: "{{ endpoint_url }}/{{ bucket_annotation }}/{{ mysqldump }}"
+    dest: "{{ downloads_dir }}/{{ mysqldump }}"
+  register: download_mysqldump

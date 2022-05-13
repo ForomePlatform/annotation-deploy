@@ -9,14 +9,15 @@ Prerequisites:
 
 Clone repo:
 ```bash
-git clone -b develop https://github.com/ForomePlatform/annotation-ibm.git annotation
-cd annotation/ansible
+git clone -b develop https://github.com/ForomePlatform/annotation-ibm.git deploy
+cd deploy/ansible
 ```
 
 Enable NOPASSWD for sudo group:
 ```bash
-sudo sed -i -re 's/^%sudo.*/%sudo ALL=(ALL:ALL) NOPASSWD:ALL/g' sudoers
+sudo sed -i -re 's/^%sudo.*/%sudo ALL=(ALL:ALL) NOPASSWD:ALL/g' /etc/sudoers
 ```
+
 Set MySQL user password:
 ```bash
 export MYSQL_USER=mysql

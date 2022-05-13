@@ -54,7 +54,7 @@ resource "local_file" "ansible_inventory" {
       ssh_private_key_file = local.ssh_private_key_file
     }
   )
-  filename = "../ansible/inventory_${local.basename}.ini"
+  filename = "../ansible/inventory_${local.basename}"
 }
 # resource "null_resource" "ansible_playbook" {
 #   depends_on = [
@@ -69,7 +69,7 @@ resource "local_file" "ansible_inventory" {
 #   # }
 #   provisioner "local-exec" {
 #     interpreter = ["bash", "-c"]
-#     command = "cd ansible && ansible-playbook main.yml --inventory=${local_file.ansible_inventory.filename}.ini"
+#     command = "cd ansible && ansible-playbook main.yml --inventory=${local_file.ansible_inventory.filename}"
 #   }
 # }
 terraform {

@@ -13,12 +13,12 @@ crash.log
 #
 *.tfvars
 # Sensitive data
-.ssh/*
+.ssh
 **/id_rsa*
 **/*.pem
 **/*.key
 **/*key.json
 *.env
 # Ansible
-inventory
-*.ini
+inventory_*
+!inventory_local

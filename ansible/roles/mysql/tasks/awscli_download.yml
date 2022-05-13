@@ -1,7 +1,7 @@
 ---
 - name: "Download mysqldump"
   amazon.aws.aws_s3:
-    bucket: "{{bucket_annotation}}"
+    bucket: "{{ bucket_annotation }}"
     object: "{{ mysqldump }}"
     dest: "{{ downloads_dir }}/{{ mysqldump }}"
     mode: get
