@@ -1,0 +1,71 @@
+---
+- name: "Install MySQL and deps"
+  become: true
+  package:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  loop:
+    - mysql-server
+    - mysql-client 
+    - python3-mysqldb
+    - libmysqlclient-dev
+  register: mysql_install
+
+- name: "Stop MySQL service"
+  become: true
+  service:
+    name: mysql
+    state: stopped
+  register: mysql_stopped
+  when: mysql_install.changed
+
+- name: "Copy /var/lib/mysql to {{ mysql_datadir }}"
+  become: true
+  shell: rsync -av /var/lib/mysql {{ mysql_datadir }}
+  register: mysql_var
+  when: mysql_stopped.changed
+
+- name: "Edit MySQL config"
+  become: true
+  lineinfile:
+    dest: /etc/mysql/mysql.conf.d/mysqld.cnf
+    regexp: "^# datadir"
+    line: "datadir = {{ mysql_datadir }}/mysql"
+    state: present
+  register: mysql_config
+  when: mysql_var.changed
+
+- name: "Edit Apparmor config"
+  become: true
+  replace:
+    path: /etc/apparmor.d/usr.sbin.mysqld
+    regexp: '^\s+/var/lib/mysql/(.*)$'
+    replace: "  {{ mysql_datadir }}/mysql/\\1"
+    backup: yes
+  register: apparmor
+  when: mysql_config.changed
+
+- name: "Restart Apparmor"
+  become: true
+  service:
+    name: apparmor
+    state: restarted
+  when: apparmor.changed
+
+- name: "Restart MySQL"
+  become: true
+  service:
+    name: mysql
+    state: restarted
+  when: mysql_config.changed
+
+- name: "Create MySQL user {{ mysql_user | default('forome', true) }}"
+  become: true
+  mysql_user:
+    name: "{{ mysql_user | default('forome', true) }}"
+    password: "{{ mysql_password | default('forome', true) }}"
+    priv: '*.*:ALL'
+    host: 'localhost'
+    state: present
+  when: mysql_install.changed

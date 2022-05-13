@@ -1,0 +1,7 @@
+---
+- name: "Download datasets archives"
+  get_url:
+    url: "{{ endpoint_url }}/{{ bucket_dataset }}/{{ item }}"
+    dest: "{{ downloads_dir }}/{{ item }}"
+  loop: "{{ datasets }}"
+  register: download_datasets

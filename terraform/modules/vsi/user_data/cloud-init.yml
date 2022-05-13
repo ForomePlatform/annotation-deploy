@@ -1,0 +1,16 @@
+#cloud-config
+bootcmd:
+- while [ ! -b $(readlink -f ${data_disk_name}) ]; do echo "waiting for device ${data_disk_name}"; sleep 5 ; done
+- printf 'g\nn\n1\n\n\nw' | fdisk ${data_disk_name}
+- mkfs.ext4 ${data_disk_name}1 -L data
+- mkdir -p /data
+mounts:
+- [ "LABEL=data", "/data", "ext4", "defaults,noatime,nofail", "0", "2" ]
+users:
+- default
+- name: ${user_name}
+  shell: '/bin/bash'
+  sudo: ['ALL=(ALL:ALL) NOPASSWD:ALL']
+  groups: sudo
+  ssh-authorized-keys:
+  - ${ssh_public_key}

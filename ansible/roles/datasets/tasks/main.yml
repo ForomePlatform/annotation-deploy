@@ -1,0 +1,10 @@
+---
+- import_tasks: geturl_download.yml
+
+- name: "Extract datasets archives"
+  unarchive:
+    src: "{{ downloads_dir }}/{{ item }}"
+    dest: "{{ cases_dir }}"
+    remote_src: yes
+  loop: "{{ datasets }}"
+  when: download_datasets.changed

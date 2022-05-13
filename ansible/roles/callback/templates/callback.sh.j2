@@ -1,0 +1,70 @@
+#!/usr/bin/env bash
+LOG="{{ data_dir }}/.scripts/callback.log"
+LOG_DATA="{{ data_dir }}/.scripts/data.log"
+LOG_MYSQL="{{ data_dir }}/.scripts/mysql.log"
+function sync_data() {
+        echo "$(date '+%B %V %T.%3N:') Start data syncing." >>"${LOG}"
+        aws --endpoint-url {{ endpoint_url }} s3 sync s3://{{ bucket_annotation }}{{ annotation_dir }} {{ annotation_dir }} >"${LOG_DATA}" 2>&1 && \
+        aws --endpoint-url {{ endpoint_url }} s3 sync s3://{{ bucket_annotation }}{{ astorage_dir }} {{ astorage_dir }} >>"${LOG_DATA}" 2>&1
+        if [[ "$?" -eq "0" ]]; then
+                echo "$(date '+%B %V %T.%3N:') Data has been synced." >>"${LOG}"
+        else
+                echo "$(date '+%B %V %T.%3N:') ERROR! Data has not been synced." >>"${LOG}"
+                return 1
+        fi
+}
+function restore_mysql() {
+        local ignore_db="(^mysql|sys|_schema$|-old$|-recovery$)"
+        local ref_db="ensembl ensembl_hg38 forome hgmd_phenbase hgmd_pro hgmd_snp hgmd_views"
+	local show_databases_sql="SHOW DATABASES WHERE \`Database\` NOT REGEXP '$ignore_db'"
+	local list_db=$(echo $(sudo mysql -e "$show_databases_sql"|awk -F " " '{if (NR!=1) print $1}'))
+        echo "$(date '+%B %V %T.%3N:') Start databases restoring." >>"${LOG}"
+	if [[ "$ref_db" == "$list_db" ]]; then
+	        echo "$(date '+%B %V %T.%3N:') Databases already exist. Skipping." >>"${LOG}"
+	else
+	        gunzip < {{ downloads_dir }}/{{ mysqldump }} | sudo mysql >"${LOG_MYSQL}" 2>&1
+                if [[ "$?" -eq "0" ]]; then
+	                echo "$(date '+%B %V %T.%3N:') Databases has been restored." >>"${LOG}"
+                else
+                        echo "$(date '+%B %V %T.%3N:') ERROR! Databases has not been restored." >>"${LOG}"
+                        return 1
+                fi
+	fi
+}
+function trigger_pipeline() {
+        curl -s --request POST --user '':'{{ azure_pat }}' \
+        --header "Content-Type: application/json" \
+        --data '{
+                "defenition": {
+                        "id": {{ azure_callback_pipeline_id }}
+                },
+                "templateParameters": {
+                        "taskSyncData": '"$taskSyncData"',
+                        "taskRestoreMysql": '"$taskRestoreMysql"',
+                        "taskRestartAstorage": '"$taskRestartAstorage"',
+                        "taskRestartNginx": '"$taskRestartNginx"'
+                }
+                }' \
+        "https://dev.azure.com/{{ azure_org }}/{{ azure_prj }}/_apis/pipelines/{{ azure_callback_pipeline_id }}/runs?api-version=6.1-preview.1"
+}
+function callback() {
+        local PROCCESS=$(ps -eaf | grep -F "$(basename $0)"| grep -v grep | wc -l)
+        echo -e "\n$(date '+%B %V %T.%3N:') Callback script started." >>"${LOG}"
+	if [[ "$PROCCESS" -gt "2" ]]; then
+	        echo "$(date '+%B %V %T.%3N:') Another instance of script already exist! Exiting." >>"${LOG}"
+	        exit
+	else
+                sync_data; taskSyncData=$?
+		restore_mysql; taskRestoreMysql=$?
+                sudo systemctl restart astorage; taskRestartAstorage=$?
+                sudo systemctl restart nginx; taskRestartNginx=$?
+                trigger_pipeline
+                if [[ "$?" -eq "0" ]]; then
+                        echo "$(date '+%B %V %T.%3N:') Callback script succeeded." >>"${LOG}"
+                else
+                        echo "$(date '+%B %V %T.%3N:') ERROR! Callback script failed." >>"${LOG}"
+                        return 1
+                fi
+	fi
+}
+callback

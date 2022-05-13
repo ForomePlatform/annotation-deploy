@@ -1,0 +1,71 @@
+{
+    "frontend":{
+        "apikey": "{{ frontend_apikey }}"
+    },
+    "database": {
+        "hg38": "/data/annotation/database/1.0.0/annotation-hg38",
+        "hg37": "/data/annotation/database/1.0.0/annotation-hg37",
+        "pastorage": "/astorage/"
+    },
+    "source": {
+        "external":{
+            "url": "http://{{ nginx_host }}:{{ nginx_port }}"
+        }
+    },
+    "connectors": {
+        "forome": {
+            "mysql": {
+                "host": "{{ mysql_host }}",
+                "port": "{{ mysql_port }}",
+                "database": "forome",
+                "user": "{{ mysql_user | default('forome', true) }}",
+                "password": "{{ mysql_password | default('forome', true) }}"
+            }
+        },
+        "astorage": {
+            "astorage": {
+                "host": "{{ nginx_host }}",
+                "port": "{{ nginx_port }}"
+            }
+        },
+        "hgmd": {
+            "mysql": {
+                "host": "{{ mysql_host }}",
+                "port": "{{ mysql_port }}",
+                "database": "hgmd_pro",
+                "user": "{{ mysql_user | default('forome', true) }}",
+                "password": "{{ mysql_password | default('forome', true) }}"
+            }
+        },
+        "gtf": {
+            "mysql": {
+                "host": "{{ mysql_host }}",
+                "port": "{{ mysql_port }}",
+                "database": "ensembl",
+                "user": "{{ mysql_user | default('forome', true) }}",
+                "password": "{{ mysql_password | default('forome', true) }}"
+            }
+        },
+        "ref": {
+            "mysql": {
+                "host": "{{ mysql_host }}",
+                "port": "{{ mysql_port }}",
+                "database": "util",
+                "user": "{{ mysql_user | default('forome', true) }}",
+                "password": "{{ mysql_password | default('forome', true) }}"
+            }
+        }
+    },
+    "ensembl-vep": {
+        "app": {
+            "exec": "/db/vep-93/ensembl-vep/vep"
+        }
+    },
+
+    "notification": {
+        "slack": {
+            "webhook_url": "{{ slack_webhook }}",
+            "channel": "{{ slack_channel }}"
+        }
+    }
+}

@@ -1,0 +1,7 @@
+---
+- name: "Download data archives"
+  get_url:
+    url: "{{ endpoint_url }}/{{ bucket_annotation }}/{{ item }}"
+    dest: "{{ downloads_dir }}/{{ item }}"
+  loop: "{{ data }}"
+  register: download_data

@@ -1,85 +1,61 @@
-# Deploy annotation service in IBM Cloud
+# Deploy annotation service
+## On local machine
 
-[Setup Terraform Environment for IBM Cloud](https://ibm.github.io/cloud-enterprise-examples/iac/setup-environment)
+### Prerequisites:
+- Linux machine on **Ubuntu 20.04.4 LTS** (x86_64)
+- Installed **ansible** (core 2.12.5)
+- About **350 Gb** free disk space at least
+- `sudo` privileges
 
-It is supposed that you already have your `terraform_key.json`.
 
-Store the API key as the environment variable `IC_API_KEY`:
+### Deployment
+
+Enable NOPASSWD for sudo group:
 ```bash
-export IC_API_KEY=$(grep '"apikey":' terraform_key.json | sed 's/.*: "\(.*\)".*/\1/')
+sudo sed -i -re 's/^%sudo.*/%sudo ALL=(ALL:ALL) NOPASSWD:ALL/g' /etc/sudoers
 ```
 
-Set Azure API key as `ARM_ACCESS_KEY`:
+Install ansible:
 ```bash
-export ARM_ACCESS_KEY=<ARM_ACCESS_KEY>
+sudo apt update
+sudo apt install python3-pip python3-dev
+sudo pip install pip --upgrade
+sudo pip install ansible==5.7.1
 ```
 
-Set aws s3 credentials:
+Check ansible version:
 ```bash
-export AWS_ACCESS_KEY_ID=<AWS_ACCESS_KEY_ID>
-export AWS_SECRET_ACCESS_KEY=<AWS_SECRET_ACCESS_KEY>
+ansible --version
+ansible [core 2.12.5]
+  ...
+  python version = 3.8.10 (default, Mar 15 2022, 12:22:08) [GCC 9.4.0]
+  jinja version = 2.10.1
+  libyaml = True
 ```
 
-Set mysql user and password:
+Clone repo:
 ```bash
-export MYSQL_USER=<MYSQL_USER>
-export MYSQL_PASSWORD=<MYSQL_PASSWORD>
+git clone -b develop https://github.com/ForomePlatform/annotation-ibm.git deploy
+cd deploy/ansible
 ```
 
-Set frontend apikey:
+Set MySQL user and password (user=`forome` and password=`forome` if not set):
 ```bash
-export FRONTEND_APIKEY=<FRONTEND_APIKEY>
+export MYSQL_USER=mysql
+export MYSQL_PASSWORD=mysql
 ```
 
-Set slack webhook and channel:
+Run ansible playbook:
 ```bash
-export SLACK_WEBHOOK=<SLACK_WEBHOOK>
-export SLACK_CHANNEL=<SLACK_CHANNEL>
+ansible-playbook main.yml -i inventory_local
 ```
 
-Set variables for Azure DevOps pipelines:
+The process takes several hous. Be patient ...
+
+Ansible playbook should end successfully without errors.
+
+Final output wxample:
 ```bash
-export AZURE_PAT=
-export AZURE_ORG=
-export AZURE_PRJ=
-export AZURE_CALLBACK_PIPELINE_ID=
+PLAY RECAP *****************************************************************************************************
+localhost                  : ok=X   changed=X    unreachable=0    failed=0    skipped=X   rescued=0    ignored=1
 ```
-
-Or you can set all of environments above in .env file.
-Copy `.env.example` to `.env` and set environments:
-```shell
-source .env
-```
-
-Copy `terraform.tfvars.example` to `terraform.tfvars` and reassign variables if necessary.
-
-Create terraform workspace if you want to deploy specific instance (default workspace is `default`):
-```bash
-terraform workspace new dev
-terraform workspace new stage
-terraform workspace new prod
-```
-
-Select proper workspace:
-```bash
-terraform workspace select dev
-```
-
-Deploy with terraform (repeat for each workspace):
-```
-terraform init
-terraform plan
-terraform apply -auto-approve
-```
-
-Configure with ansible:
-```bash
-ansible-playbook main.yml --inventory=<workspace_name>.ini
-```
-
-To destroy deployment:
-```bash
-terraform apply -destroy -auto-approve
-```
-
-***Do not forget to use VPN to be able to connect to the instance through SSH.***

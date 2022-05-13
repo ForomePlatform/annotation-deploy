@@ -1,0 +1,8 @@
+---
+- name: "Restore mysqldump"
+  become: true
+  community.mysql.mysql_db:
+    name: all
+    state: import
+    target: "{{ downloads_dir }}/{{ mysqldump }}"
+  when: download_mysqldump.changed

@@ -1,0 +1,10 @@
+---
+- name: "Download mysqldump"
+  amazon.aws.aws_s3:
+    bucket: "{{ bucket_annotation }}"
+    object: "{{ mysqldump }}"
+    dest: "{{ downloads_dir }}/{{ mysqldump }}"
+    mode: get
+    overwrite: different
+    s3_url: "{{ endpoint_url }}"
+  register: download_mysqldump
