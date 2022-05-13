@@ -60,11 +60,11 @@
     state: restarted
   when: mysql_config.changed
 
-- name: "Create MySQL user {{ mysql_user }}"
+- name: "Create MySQL user {{ mysql_user | default('forome', true) }}"
   become: true
   mysql_user:
-    name: "{{ mysql_user }}"
-    password: "{{ mysql_password }}"
+    name: "{{ mysql_user | default('forome', true) }}"
+    password: "{{ mysql_password | default('forome', true) }}"
     priv: '*.*:ALL'
     host: 'localhost'
     state: present

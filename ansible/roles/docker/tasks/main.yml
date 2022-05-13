@@ -20,8 +20,8 @@
 - name: "Add Docker Repository"
   become: true
   apt_repository:
-    repo: deb https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
-    # repo: deb https://download.docker.com/linux/ubuntu focal stable
+    # repo: deb https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
+    repo: deb https://download.docker.com/linux/ubuntu focal stable
     state: present
 
 - name: "Install Docker"
@@ -38,8 +38,8 @@
 - name: "Install Docker-compose"
   become: true
   get_url:
-    url : https://github.com/docker/compose/releases/download/1.29.2/docker-compose-{{ ansible_system }}-{{ ansible_architecture }}
-    # url : https://github.com/docker/compose/releases/download/1.29.2/docker-compose-Linux-x86_64
+    # url : https://github.com/docker/compose/releases/download/1.29.2/docker-compose-{{ ansible_system }}-{{ ansible_architecture }}
+    url : https://github.com/docker/compose/releases/download/1.29.2/docker-compose-Linux-x86_64
     dest: /usr/local/bin/docker-compose
     mode: 'u+x,g+x'
 
