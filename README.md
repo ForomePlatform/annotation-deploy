@@ -18,7 +18,7 @@ sudo sed -i -re 's/^%sudo.*/%sudo ALL=(ALL:ALL) NOPASSWD:ALL/g' /etc/sudoers
 Install ansible:
 ```bash
 sudo apt update
-sudo apt install python3-pip python3-dev
+sudo apt install -y python3-pip python3-dev
 sudo pip install pip --upgrade
 sudo pip install ansible==5.7.1
 ```
