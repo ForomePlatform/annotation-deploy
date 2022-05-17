@@ -50,7 +50,7 @@ Run ansible playbook:
 ansible-playbook main.yml -i inventory_local
 ```
 
-The process takes several hous. Be patient ...
+The process takes about 7 hous. Be patient ...
 
 Ansible playbook should end successfully without errors.
 
