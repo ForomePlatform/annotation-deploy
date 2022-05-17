@@ -35,7 +35,7 @@ ansible [core 2.12.5]
 
 Clone repo:
 ```bash
-git clone -b develop https://github.com/ForomePlatform/annotation-ibm.git deploy
+git clone https://github.com/ForomePlatform/annotation-ibm.git deploy
 cd deploy/ansible
 ```
 
