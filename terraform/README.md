@@ -82,4 +82,9 @@ To destroy deployment:
 terraform apply -destroy -auto-approve
 ```
 
+To release floating ip:
+```bash
+terraform state rm <resource-id>
+```
+
 ***Do not forget to use VPN to be able to connect to the instance through SSH.***

@@ -4,14 +4,11 @@ output "instance_name" {
 output "instance_profile" {
   value = ibm_is_instance.vsi.profile
 }
-output "instance_ext_ip" {
-  value = ibm_is_floating_ip.fip.address
+output "instance_intf" {
+  value = ibm_is_instance.vsi.primary_network_interface[0].id
 }
-# output "var_volume_profile" {
-#   value = ibm_is_volume.var.profile
-# }
-# output "var_volume_capacity" {
-#   value = ibm_is_volume.var.capacity
+# output "instance_ext_ip" {
+#   value = ibm_is_floating_ip.fip.address
 # }
 output "data_volume_profile" {
   value = ibm_is_volume.data.profile

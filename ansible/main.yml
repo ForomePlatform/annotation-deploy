@@ -15,19 +15,19 @@
     - name: "Set local user"
       set_fact:
         user: "{{ lookup('env', 'USER') }}"
-      when: ansible_connection is defined and ansible_connection == 'local'
+      when: ansible_connection == 'local'
 
     - name: "Set remote user"
       set_fact:
         user: "{{ lookup('vars', 'ansible_user') }}"
-      when: ansible_connection is defined and ansible_connection != 'local'
+      when: ansible_connection != 'local'
 
     - name: "Gathering facts"
       setup:
 
   roles:
     - role: users
-      when: ansible_connection is defined and ansible_connection != 'local'
+      when: ansible_connection != 'local'
     - role: apt
     - role: docker
     - role: prepdir

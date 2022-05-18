@@ -18,7 +18,7 @@ sudo sed -i -re 's/^%sudo.*/%sudo ALL=(ALL:ALL) NOPASSWD:ALL/g' /etc/sudoers
 Install ansible:
 ```bash
 sudo apt update
-sudo apt install python3-pip python3-dev
+sudo apt install -y python3-pip python3-dev
 sudo pip install pip --upgrade
 sudo pip install ansible==5.7.1
 ```
@@ -35,7 +35,7 @@ ansible [core 2.12.5]
 
 Clone repo:
 ```bash
-git clone -b develop https://github.com/ForomePlatform/annotation-ibm.git deploy
+git clone https://github.com/ForomePlatform/annotation-ibm.git deploy
 cd deploy/ansible
 ```
 
@@ -50,7 +50,7 @@ Run ansible playbook:
 ansible-playbook main.yml -i inventory_local
 ```
 
-The process takes several hous. Be patient ...
+The process takes about 7 hous. Be patient ...
 
 Ansible playbook should end successfully without errors.
 

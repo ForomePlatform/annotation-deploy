@@ -45,15 +45,6 @@ variable "data_volume_profile" {
 variable "data_volume_capacity" {
   default = "1000"
 }
-# variable "var_disk_name" {
-#   default = "/dev/vdc"
-# }
-# variable "var_volume_profile" {
-#   default = "general-purpose"
-# }
-# variable "var_volume_capacity" {
-#   default = "200"
-# }
 variable "ssh_key_name" {
   default = "forome-ssh"
 }
@@ -62,4 +53,8 @@ variable "ssh_public_key_file" {
 }
 variable "ssh_private_key_file" {
   default = ".ssh/forome-ssh"
+}
+variable "tags" {
+  type = list
+  default = []
 }

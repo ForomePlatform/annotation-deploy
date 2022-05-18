@@ -3,5 +3,6 @@
   get_url:
     url: "{{ endpoint_url }}/{{ bucket_dataset }}/{{ item }}"
     dest: "{{ downloads_dir }}/{{ item }}"
+    tmp_dest: "{{ downloads_dir }}"
   loop: "{{ datasets }}"
   register: download_datasets
