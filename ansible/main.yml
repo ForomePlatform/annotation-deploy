@@ -26,21 +26,17 @@
       setup:
 
   roles:
-    - role: users
-      when: ansible_connection != 'local'
-    - role: apt
-    - role: docker
-    - role: prepdir
-    - role: pipdep
-    - role: awscli
-      when: callback | default(false) | bool == true
-    - role: mysql
-    - role: data
-      when: callback | default(false) | bool == false
-    - role: datasets
-    - role: nginx
-    - role: python
-    - role: astorage
-    - role: annotation
-    - role: callback
-      when: callback | default(false) | bool
+    - { role: users, tags: ['users'], when: ansible_connection != 'local' }
+    - { role: apt, tags: ['apt'] }
+    - { role: docker, tags: ['docker']}
+    - { role: prepdir, tags: ['prepdir'] }
+    - { role: pipdep, tags: ['pipdep'] }
+    - { role: awscli, tags: ['awscli'], when: callback | default(false) | bool == true }
+    - { role: mysql, tags: ['mysql'] }
+    - { role: data, tags: ['data'], when: callback | default(false) | bool == false }
+    - { role: datasets, tags: ['datasets'] }
+    - { role: nginx, tags: ['nginx'] }
+    - { role: python, tags: ['python'] }
+    - { role: astorage, tags: ['astorage'] }
+    - { role: annotation, tags: ['annotation'] }
+    - { role: callback, tags: ['callback'], when: callback | default(false) | bool }
