@@ -10,3 +10,12 @@ var_volume_capacity  = "1000"
 ssh_key_name         = "forome-ssh"
 ssh_public_key_file  = ".ssh/forome-ssh.pub"
 ssh_private_key_file = ".ssh/forome-ssh"
+security_groups      = [
+    "r006-232af301-0d00-4d1e-98be-d37427e83cce",
+    "r006-03e4c2d2-3c3c-4258-9588-93ab17b22e9c",
+    "r006-31facba3-55a2-4dcf-ba75-c551c09ee1df",
+    "r006-8ef09115-fb22-44a0-8742-f85615632789"
+]
+tags                 = [
+    "project:forome"
+]

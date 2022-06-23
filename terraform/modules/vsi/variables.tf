@@ -4,7 +4,7 @@ variable "region" {}
 variable "zone" {}
 variable "vpc" {}
 variable "subnet" {}
-variable "security_group" {}
+variable "security_groups" {}
 variable "resource_group" {}
 variable "instance_name" {}
 variable "instance_profile" {}

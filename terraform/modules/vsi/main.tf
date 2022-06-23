@@ -42,6 +42,6 @@ resource "ibm_is_instance" "vsi" {
   primary_network_interface {
     name            = "eth0"
     subnet          = var.subnet
-    security_groups = [ var.security_group ]
+    security_groups = var.security_groups
   }
 }

@@ -32,7 +32,7 @@ module "vsi" {
   zone = var.zone
   vpc = var.vpc
   subnet= var.subnet
-  security_group = var.security_group
+  security_groups = var.security_groups
   resource_group = var.resource_group
   instance_name = var.instance_name
   instance_profile = var.instance_profile
