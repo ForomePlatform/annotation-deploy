@@ -49,10 +49,10 @@ variable "ssh_key_name" {
   default = "forome-ssh"
 }
 variable "ssh_public_key_file" {
-  default = ".ssh/forome-ssh.pub"
+  default = "../.ssh/forome-ssh.pub"
 }
 variable "ssh_private_key_file" {
-  default = ".ssh/forome-ssh"
+  default = "../.ssh/forome-ssh"
 }
 variable "tags" {
   type = list
