@@ -15,7 +15,7 @@ data "template_file" "user_data" {
 #   target         = ibm_is_instance.vsi.primary_network_interface[0].id
 # }
 resource "ibm_is_volume" "data" {
-  name           = "${var.instance_name}-${var.basename}-data"
+  name           = "${var.basename}-data"
   resource_group = var.resource_group
   zone           = var.zone
   profile        = var.data_volume_profile
@@ -23,7 +23,7 @@ resource "ibm_is_volume" "data" {
   tags           = var.tags
 }
 resource "ibm_is_instance" "vsi" {
-  name           = "${var.instance_name}-${var.basename}"
+  name           = var.basename
   resource_group = var.resource_group
   vpc            = var.vpc
   zone           = var.zone
@@ -37,7 +37,7 @@ resource "ibm_is_instance" "vsi" {
     ignore_changes = [ user_data ]
   }
   boot_volume {
-    name         = "${var.instance_name}-${var.basename}-boot"
+    name         = "${var.basename}-boot"
   }
   primary_network_interface {
     name            = "eth0"

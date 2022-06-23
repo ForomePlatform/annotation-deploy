@@ -2,7 +2,8 @@ locals {
   ssh_public_key = file(pathexpand("${var.ssh_public_key_file}"))
   ssh_public_key_file = pathexpand("${var.ssh_public_key_file}")
   ssh_private_key_file = pathexpand("${var.ssh_private_key_file}")
-  basename = "${terraform.workspace}"
+  basename = terraform.workspace == "default" ? "${var.instance_name}" : "${var.instance_name}-${terraform.workspace}"
+  inventory = terraform.workspace == "default" ? "inventory" : "inventory_${terraform.workspace}"
 }
 module "fip" {
   source = "./modules/fip"
@@ -55,7 +56,7 @@ resource "local_file" "ansible_inventory" {
   ]
   content = templatefile("../ansible/inventory.tpl",
     {
-      basename = local.basename
+      workspace = terraform.workspace
       instance_name = module.vsi.instance_name
       # instance_ext_ip = module.vsi.instance_ext_ip
       instance_ext_ip = module.fip.instance_ext_ip
@@ -64,7 +65,7 @@ resource "local_file" "ansible_inventory" {
       ssh_private_key_file = local.ssh_private_key_file
     }
   )
-  filename = "../ansible/inventory_${local.basename}"
+  filename = "../ansible/${local.inventory}"
 }
 # resource "null_resource" "ansible_playbook" {
 #   depends_on = [
