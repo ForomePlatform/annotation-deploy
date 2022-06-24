@@ -57,5 +57,5 @@ Ansible playbook should end successfully without errors.
 Final output example:
 ```bash
 PLAY RECAP *****************************************************************************************************
-localhost                  : ok=X   changed=X    unreachable=0    failed=0    skipped=X   rescued=0    ignored=1
+localhost                  : ok=X   changed=X    unreachable=0    failed=0    skipped=X   rescued=0    ignored=0
 ```
