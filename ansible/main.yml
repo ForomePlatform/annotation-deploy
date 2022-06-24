@@ -11,24 +11,24 @@
         search_regex: OpenSSH
         timeout: 600
       connection: local
-      tags: 'always'
+      # tags: 'always'
 
     - name: "Set local user"
       set_fact:
         user: "{{ lookup('env', 'USER') }}"
       when: ansible_connection == 'local'
-      tags: 'always'
+      # tags: 'always'
 
     - name: "Set remote user"
       set_fact:
         user: "{{ (ansible_user|default(remote_user))|default(ansible_ssh_user) }}"
         # user: "{{ lookup('vars', 'ansible_user' }}"
       when: ansible_connection != 'local'
-      tags: 'always'
+      # tags: 'always'
 
     - name: "Gathering facts"
       setup:
-      tags: 'always'
+      # tags: 'always'
 
   roles:
     - { role: users, tags: ['users'], when: ansible_connection != 'local' }
