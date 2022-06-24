@@ -30,6 +30,13 @@
       setup:
       tags: 'always'
 
+    - name: "remote_tmp"
+      become: true
+      file:
+        path: "{{ remote_tmp }}"
+        state: directory
+        mode: 0777
+
   roles:
     - { role: users, tags: ['users'], when: ansible_connection != 'local' }
     - { role: apt, tags: ['apt'] }
