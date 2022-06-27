@@ -3,13 +3,10 @@ instance_profile     = "cx2-8x16"
 user_name            = "forome"
 data_disk_name       = "/dev/vdd"
 data_volume_profile  = "general-purpose"
-data_volume_capacity = "1000"
-var_disk_name        = "/dev/vde"
-var_volume_profile   = "general-purpose"
-var_volume_capacity  = "1000"
+data_volume_capacity = "3000"
 ssh_key_name         = "forome-ssh"
-ssh_public_key_file  = ".ssh/forome-ssh.pub"
-ssh_private_key_file = ".ssh/forome-ssh"
+ssh_public_key_file  = "../.ssh/forome-ssh.pub"
+ssh_private_key_file = "../.ssh/forome-ssh"
 security_groups      = [
     "r006-232af301-0d00-4d1e-98be-d37427e83cce",
     "r006-03e4c2d2-3c3c-4258-9588-93ab17b22e9c",
@@ -17,5 +14,6 @@ security_groups      = [
     "r006-8ef09115-fb22-44a0-8742-f85615632789"
 ]
 tags                 = [
+    "name:annotation",
     "project:forome"
 ]
