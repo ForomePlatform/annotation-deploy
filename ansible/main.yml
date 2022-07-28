@@ -11,36 +11,37 @@
         search_regex: OpenSSH
         timeout: 600
       connection: local
+      tags: 'always'
 
     - name: "Set local user"
       set_fact:
         user: "{{ lookup('env', 'USER') }}"
       when: ansible_connection == 'local'
+      tags: 'always'
 
     - name: "Set remote user"
       set_fact:
-        user: "{{ lookup('vars', 'ansible_user') }}"
+        user: "{{ (ansible_user|default(remote_user))|default(ansible_ssh_user) }}"
+        # user: "{{ lookup('vars', 'ansible_user' }}"
       when: ansible_connection != 'local'
+      tags: 'always'
 
     - name: "Gathering facts"
       setup:
+      tags: 'always'
 
   roles:
-    - role: users
-      when: ansible_connection != 'local'
-    - role: apt
-    - role: docker
-    - role: prepdir
-    - role: pipdep
-    - role: awscli
-      when: callback | default(false) | bool == true
-    - role: mysql
-    - role: data
-      when: callback | default(false) | bool == false
-    - role: datasets
-    - role: nginx
-    - role: python
-    - role: astorage
-    - role: annotation
-    - role: callback
-      when: callback | default(false) | bool
+    - { role: users, tags: ['users'], when: ansible_connection != 'local' }
+    - { role: apt, tags: ['apt'] }
+    - { role: docker, tags: ['docker']}
+    - { role: prepdir, tags: ['prepdir'] }
+    - { role: pipdep, tags: ['pipdep'] }
+    - { role: awscli, tags: ['awscli'], when: callback | default(false) | bool == true }
+    - { role: mysql, tags: ['mysql'] }
+    - { role: data, tags: ['data'], when: callback | default(false) | bool == false }
+    - { role: datasets, tags: ['datasets'] }
+    - { role: nginx, tags: ['nginx'] }
+    - { role: python, tags: ['python'] }
+    - { role: astorage, tags: ['astorage'] }
+    - { role: annotation, tags: ['annotation'] }
+    - { role: callback, tags: ['callback'], when: callback | default(false) | bool }

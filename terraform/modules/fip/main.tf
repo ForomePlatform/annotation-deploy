@@ -1,5 +1,5 @@
 resource "ibm_is_floating_ip" "fip" {
-  name           = "${var.instance_name}-${var.basename}"
+  name           = var.basename
   resource_group = var.resource_group
   target         = var.instance_intf
   tags           = var.tags

@@ -23,9 +23,9 @@ variable "subnet" {
   description = "sn-20220204-02"
   default = "0727-bea5643c-ddf6-4405-8c87-31a8c7642f8a"
 }
-variable "security_group" {
+variable "security_groups" {
   description = "anything-swab-grass-aide"
-  default = "r006-232af301-0d00-4d1e-98be-d37427e83cce"
+  default = [ "r006-232af301-0d00-4d1e-98be-d37427e83cce" ]
 }
 variable "instance_name" {
   default = "annotation"
@@ -49,10 +49,10 @@ variable "ssh_key_name" {
   default = "forome-ssh"
 }
 variable "ssh_public_key_file" {
-  default = ".ssh/forome-ssh.pub"
+  default = "../.ssh/forome-ssh.pub"
 }
 variable "ssh_private_key_file" {
-  default = ".ssh/forome-ssh"
+  default = "../.ssh/forome-ssh"
 }
 variable "tags" {
   type = list

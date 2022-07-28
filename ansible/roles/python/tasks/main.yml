@@ -23,6 +23,8 @@
     - setuptools==58.0.0
     - "{{ astorage_dir }}/Anfisa-Annotations/a_storage/plainrocks/"
     - cwlref-runner
+    - pymongo
+    - mysql-connector-python
 
 - name: "Install requirements"
   pip:

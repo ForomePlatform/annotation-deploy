@@ -4,8 +4,15 @@
   user:
     name: "{{ user }}"
     shell: /bin/bash
-    groups: sudo
+    # groups: sudo
     state: present
+
+- name: "Add {{ user }} to sudo group"
+  become: true
+  user:
+    name: "{{ user }}"
+    groups: "{{ user }}, sudo"
+    append: yes
 
 - name: "Add authorized keys"
   become: true
