@@ -22,4 +22,10 @@
   community.general.maven_artifact:
     group_id: org.forome
     artifact_id: annotations
-    dest: /data/annotation/annotation.jar
+    dest: "{{ annotation_dir }}/annotation.jar"
+
+- name: "Download foreground annotation from bucket"
+  get_url:
+    url: "{{ endpoint_url }}/{{ bucket_annotation }}/data/annotation/annotation_foreground.jar"
+    dest: "{{ annotation_dir }}/annotation_foreground.jar"
+    tmp_dest: "{{ downloads_dir }}"
