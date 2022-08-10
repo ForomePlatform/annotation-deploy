@@ -20,5 +20,6 @@ crash.log
 **/*key.json
 *.env
 # Ansible
+inventory
 inventory_*
 !inventory_local

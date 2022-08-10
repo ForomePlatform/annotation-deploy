@@ -43,21 +43,22 @@
     dest: /usr/local/bin/docker-compose
     mode: 'u+x,g+x'
 
-- name: Check if {{ user }} in docker group
-  shell: groups | grep docker
-  register: docker_group
-  ignore_errors: true
+# - name: Check if {{ user }} in docker group
+#   shell: groups | grep docker
+#   register: docker_group
+#   ignore_errors: true
 
 - name: "Add {{ user }} to docker group"
   become: true
   user:
     name: "{{ user }}"
+    groups: "{{ user }}, docker"
     append: yes
-    groups: docker
-    state: present
+  register: docker_group
 
 - name: "Reboot due docker group"
   become: true
   reboot:
     reboot_timeout: 600
-  when: docker_group.failed == true and ansible_connection != 'local'
+  when: docker_group.changed == true and ansible_connection != 'local'
+  # when: docker_group.failed == true and ansible_connection != 'local'

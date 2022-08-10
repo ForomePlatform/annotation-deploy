@@ -43,7 +43,6 @@ data:
   # - schema_fullpath_stub.tar.gz
   # - rdbs_fullpath_stub.tar.gz
 datasets:
-  - NA12878_wgs_hlpanel.tar.gz
   - pgp3140_wgs_hlpanel.tar.gz
   - pgp3140_wgs_nist1696.tar.gz
   - pgp3140_wgs_rtg1997.tar.gz
